@@ -14,8 +14,30 @@
     "footer": {
       "type": "footer",
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "contact_heading": "Contact",
+        "use_store_contact": false,
+        "contact_name": "Lūmen Studio",
+        "contact_address": "94A Oxford St\nPaddington NSW 2021\nAustralia",
+        "contact_phone": "+61 2 8005 1234",
+        "contact_email": "hello@lumen-skincare.com",
+        "contact_note": "Demo details for a portfolio store.",
+        "show_country_selector": true,
+        "shop_heading": "Shop",
+        "shop_menu": "",
+        "help_heading": "Help",
+        "help_menu": "",
+        "show_newsletter": true,
+        "newsletter_heading": "Get on the list",
+        "newsletter_text": "Subscribe for exclusive offers, early access, and skincare updates.",
+        "newsletter_placeholder": "Enter your email",
+        "newsletter_success": "Thank you. You're on the list.",
+        "social_instagram": "",
+        "social_facebook": "",
+        "social_youtube": "",
+        "social_tiktok": "",
+        "copyright_name": "Lūmen",
+        "show_payment_icons": true,
+        "logo_width": 100
       }
     }
   },

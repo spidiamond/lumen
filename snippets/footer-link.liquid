@@ -1,0 +1,14 @@
+{%- comment -%}
+  Footer list item. Accepts `url` and `title`.
+{%- endcomment -%}
+<li>
+  <a
+    class="site-footer__link"
+    href="{{ url }}"
+    {% if request.path == url %}
+      aria-current="page"
+    {% endif %}
+  >
+    {{- title -}}
+  </a>
+</li>

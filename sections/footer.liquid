@@ -1,74 +1,606 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+{{ 'footer.css' | asset_url | stylesheet_tag }}
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+{%- liquid
+  assign newsletter_id = 'FooterNewsletter-' | append: section.id
+  assign country_id = 'FooterCountry-' | append: section.id
+  assign flag_codes = 'US,DE,GB,AU,CA,JP,IN' | split: ','
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
+  if section.settings.use_store_contact
+    assign contact_name = shop.name
+    assign contact_address = shop.address.summary
+    assign contact_phone = shop.phone
+    assign contact_email = shop.email
+  else
+    assign contact_name = section.settings.contact_name
+    assign contact_address = section.settings.contact_address | newline_to_br
+    assign contact_phone = section.settings.contact_phone
+    assign contact_email = section.settings.contact_email
+  endif
+  assign phone_href = contact_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-'
+
+  assign has_socials = false
+  if section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.social_youtube != blank or section.settings.social_tiktok != blank
+    assign has_socials = true
+  endif
+
+  assign show_localization = false
+  if section.settings.show_country_selector and localization.available_countries.size > 1
+    assign show_localization = true
+  endif
+
+  assign show_payments = false
+  if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0
+    assign show_payments = true
+  endif
+-%}
+
+<footer class="site-footer full-width" data-site-footer>
+  <div class="site-footer__inner">
+    <div class="site-footer__grid">
+      <div class="site-footer__column site-footer__column--contact">
+        {%- if section.settings.contact_heading != blank -%}
+          <h2 class="site-footer__heading">{{ section.settings.contact_heading }}</h2>
+        {%- endif -%}
+
+        <address class="site-footer__contact">
+          {%- if contact_name != blank -%}
+            <span class="site-footer__contact-name">{{ contact_name }}</span>
+          {%- endif -%}
+          {%- if contact_address != blank -%}
+            <span class="site-footer__contact-address">{{ contact_address }}</span>
+          {%- endif -%}
+          {%- if contact_phone != blank or contact_email != blank -%}
+            <span class="site-footer__contact-lines">
+              {%- if contact_phone != blank -%}
+                <a class="site-footer__link" href="tel:{{ phone_href }}">{{ contact_phone }}</a>
+              {%- endif -%}
+              {%- if contact_email != blank -%}
+                <a class="site-footer__link" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+        </address>
+
+        {%- if section.settings.contact_note != blank and section.settings.use_store_contact == false -%}
+          <p class="site-footer__note">{{ section.settings.contact_note }}</p>
+        {%- endif -%}
+
+        {%- if show_localization -%}
+          {%- form 'localization', class: 'site-footer__localization', data-footer-localization: '' -%}
+            <label class="site-footer__visually-hidden" for="{{ country_id }}">Country/region</label>
+            <div class="site-footer__select">
+              {%- if flag_codes contains localization.country.iso_code -%}
+                {% render 'currency-flag', code: localization.country.iso_code %}
+              {%- endif -%}
+              <select id="{{ country_id }}" name="country_code" data-footer-country>
+                {%- for country in localization.available_countries -%}
+                  <option
+                    value="{{ country.iso_code }}"
+                    {% if country.iso_code == localization.country.iso_code %}
+                      selected
+                    {% endif %}
+                  >
+                    {{- country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol -}})
+                  </option>
+                {%- endfor -%}
+              </select>
+              <svg class="site-footer__select-chevron" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 4.5 6 8l3.5-3.5"/>
+              </svg>
+            </div>
+            <noscript>
+              <button class="site-footer__localization-submit" type="submit">Update</button>
+            </noscript>
+          {%- endform -%}
+        {%- endif -%}
+      </div>
+
+      <nav class="site-footer__column site-footer__column--shop" aria-labelledby="FooterShopHeading-{{ section.id }}">
+        <h2 class="site-footer__heading" id="FooterShopHeading-{{ section.id }}">{{ section.settings.shop_heading }}</h2>
+        <ul class="site-footer__list" role="list">
+          {%- if section.settings.shop_menu.links.size > 0 -%}
+            {%- for link in section.settings.shop_menu.links -%}
+              <li>
+                <a
+                  class="site-footer__link"
+                  href="{{ link.url }}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- liquid
+              assign all_url = routes.all_products_collection_url
+              assign best_url = collections['best-sellers'].url | default: all_url
+              if collections['best-sellers'].id == blank
+                assign best_url = all_url | append: '?sort_by=best-selling'
+              endif
+              assign new_url = collections['new-arrivals'].url
+              if collections['new-arrivals'].id == blank
+                assign new_url = all_url | append: '?sort_by=created-descending'
+              endif
+            -%}
+            {% render 'footer-link', url: all_url, title: 'All products' %}
+            {% render 'footer-link', url: best_url, title: 'Best sellers' %}
+            {%- if collections['skincare'].id != blank -%}
+              {% render 'footer-link', url: collections['skincare'].url, title: 'Skincare' %}
+            {%- endif -%}
+            {%- if collections['sets'].id != blank -%}
+              {% render 'footer-link', url: collections['sets'].url, title: 'Sets' %}
+            {%- endif -%}
+            {% render 'footer-link', url: new_url, title: 'New arrivals' %}
+          {%- endif -%}
+        </ul>
+      </nav>
+
+      <nav class="site-footer__column site-footer__column--help" aria-labelledby="FooterHelpHeading-{{ section.id }}">
+        <h2 class="site-footer__heading" id="FooterHelpHeading-{{ section.id }}">{{ section.settings.help_heading }}</h2>
+        <ul class="site-footer__list" role="list">
+          {%- if section.settings.help_menu.links.size > 0 -%}
+            {%- for link in section.settings.help_menu.links -%}
+              <li>
+                <a
+                  class="site-footer__link"
+                  href="{{ link.url }}"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- liquid
+              assign faq_page = pages['faqs']
+              if faq_page.id == blank
+                assign faq_page = pages['faq']
+              endif
+            -%}
+            {%- if faq_page.id != blank -%}
+              {% render 'footer-link', url: faq_page.url, title: 'FAQs' %}
+            {%- endif -%}
+            {%- if pages['contact'].id != blank -%}
+              {% render 'footer-link', url: pages['contact'].url, title: 'Contact' %}
+            {%- endif -%}
+            {%- if shop.shipping_policy != blank -%}
+              {% render 'footer-link', url: shop.shipping_policy.url, title: 'Shipping &amp; returns' %}
+            {%- endif -%}
+            {%- if shop.refund_policy != blank -%}
+              {% render 'footer-link', url: shop.refund_policy.url, title: shop.refund_policy.title %}
+            {%- endif -%}
+            {%- if shop.privacy_policy != blank -%}
+              {% render 'footer-link', url: shop.privacy_policy.url, title: shop.privacy_policy.title %}
+            {%- endif -%}
+            {%- if shop.terms_of_service != blank -%}
+              {% render 'footer-link', url: shop.terms_of_service.url, title: shop.terms_of_service.title %}
+            {%- endif -%}
+          {%- endif -%}
+        </ul>
+      </nav>
+
+      {%- if section.settings.show_newsletter -%}
+        <div class="site-footer__column site-footer__column--newsletter">
+          <div class="site-footer__newsletter-intro">
+            <h2 class="site-footer__heading" id="{{ newsletter_id }}-heading">{{ section.settings.newsletter_heading }}</h2>
+            {%- if section.settings.newsletter_text != blank -%}
+              <p class="site-footer__text">{{ section.settings.newsletter_text }}</p>
+            {%- endif -%}
+          </div>
+
+          <div class="site-footer__newsletter-body">
+            {%- form 'customer', id: newsletter_id, class: 'site-footer__newsletter', novalidate: 'novalidate', data-footer-newsletter: '' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              {%- liquid
+                assign newsletter_state = ''
+                if form.posted_successfully?
+                  assign newsletter_state = 'success'
+                elsif form.errors
+                  assign newsletter_state = 'error'
+                endif
+              -%}
+              <label class="site-footer__visually-hidden" for="{{ newsletter_id }}-email">Email address</label>
+              <div class="site-footer__field{% if newsletter_state == 'error' %} site-footer__field--error{% endif %}">
+                <input
+                  class="site-footer__input"
+                  id="{{ newsletter_id }}-email"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  placeholder="{{ section.settings.newsletter_placeholder }}"
+                  autocomplete="email"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  required
+                  aria-describedby="{{ newsletter_id }}-status"
+                  {% if newsletter_state == 'error' %}
+                    aria-invalid="true"
+                  {% endif %}
+                >
+                <button class="site-footer__submit" type="submit" aria-label="Subscribe">
+                  <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h13.5M11.5 5l5 5-5 5"/>
+                  </svg>
+                </button>
+              </div>
+
+              <p
+                class="site-footer__form-status{% if newsletter_state != blank %} site-footer__form-status--{{ newsletter_state }}{% endif %}"
+                id="{{ newsletter_id }}-status"
+                role="status"
+                tabindex="-1"
+                data-footer-newsletter-status
+                {% if newsletter_state != blank %}
+                  data-state="{{ newsletter_state }}"
+                {% endif %}
+              >
+                {%- if newsletter_state == 'success' -%}
+                  {{ section.settings.newsletter_success }}
+                {%- elsif newsletter_state == 'error' -%}
+                  {%- if form.errors.messages['email'] != blank -%}
+                    {{ form.errors.translated_fields['email'] | capitalize }}
+                    {{ form.errors.messages['email'] }}
+                  {%- else -%}
+                    {{ form.errors.messages['form'] | default: 'Something went wrong. Please try again.' }}
+                  {%- endif -%}
+                {%- endif -%}
+              </p>
+            {%- endform -%}
+
+            {%- if has_socials -%}
+              <ul class="site-footer__socials" role="list">
+                {%- if section.settings.social_instagram != blank -%}
+                  <li>
+                    <a class="site-footer__social" href="{{ section.settings.social_instagram }}" target="_blank" rel="noopener">
+                      <span class="site-footer__visually-hidden">Instagram (opens in a new tab)</span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/>
+                        <circle cx="12" cy="12" r="3.9"/>
+                        <circle cx="17.2" cy="6.8" r="0.4" fill="currentColor"/>
+                      </svg>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if section.settings.social_facebook != blank -%}
+                  <li>
+                    <a class="site-footer__social" href="{{ section.settings.social_facebook }}" target="_blank" rel="noopener">
+                      <span class="site-footer__visually-hidden">Facebook (opens in a new tab)</span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                        <path d="M13.4 21v-7.6H16l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H7.8v3h2.6V21h3Z"/>
+                      </svg>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if section.settings.social_youtube != blank -%}
+                  <li>
+                    <a class="site-footer__social" href="{{ section.settings.social_youtube }}" target="_blank" rel="noopener">
+                      <span class="site-footer__visually-hidden">YouTube (opens in a new tab)</span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                        <path fill-rule="evenodd" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4a2.5 2.5 0 0 0-1.8 1.8A26 26 0 0 0 2 12c0 1.6.1 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.3-1.6.4-3.2.4-4.8s-.1-3.2-.4-4.8ZM10 15V9l5.2 3L10 15Z"/>
+                      </svg>
+                    </a>
+                  </li>
+                {%- endif -%}
+                {%- if section.settings.social_tiktok != blank -%}
+                  <li>
+                    <a class="site-footer__social" href="{{ section.settings.social_tiktok }}" target="_blank" rel="noopener">
+                      <span class="site-footer__visually-hidden">TikTok (opens in a new tab)</span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                        <path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6Z"/>
+                      </svg>
+                    </a>
+                  </li>
+                {%- endif -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__bar">
+      <p class="site-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }}
+        {{ section.settings.copyright_name | default: shop.name }}
+      </p>
+
+      {%- if show_payments -%}
+        <div class="site-footer__payments">
+          <h2 class="site-footer__visually-hidden">Payment methods</h2>
+          <ul class="site-footer__payment-list" role="list">
+            {%- for type in shop.enabled_payment_types -%}
+              <li>{{ type | payment_type_svg_tag: class: 'site-footer__payment-icon' }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer__mark" style="--footer-logo-width: {{ section.settings.logo_width }}%;">
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 2400
+          | image_tag:
+            class: 'site-footer__logo',
+            widths: '600, 900, 1200, 1600, 2000, 2400',
+            sizes: '(min-width: 1440px) 1320px, 92vw',
+            alt: '',
+            loading: 'lazy'
+        }}
+      {%- else -%}
+        <img
+          class="site-footer__logo"
+          src="{{ 'logo-grey.svg' | asset_url }}"
+          alt=""
+          width="163"
+          height="44"
+          loading="lazy"
+          decoding="async"
+        >
+      {%- endif -%}
+    </div>
   </div>
 </footer>
 
-{% stylesheet %}
-  footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
+<script>
+  (function () {
+    var footer = document.currentScript && document.currentScript.previousElementSibling;
+    if (!footer || !footer.matches('[data-site-footer]')) return;
 
-  @media (max-width: 749px) {
-    footer {
-      flex-direction: column;
-      align-items: center;
-      margin-top: 0;
-      padding: 1.5rem 1rem 2rem;
-      text-align: center;
+    var select = footer.querySelector('[data-footer-country]');
+    if (select) {
+      var initial = select.value;
+      var pendingKeyboardChange = false;
+
+      function submit() {
+        pendingKeyboardChange = false;
+        if (select.value !== initial) select.form.submit();
+      }
+
+      // Arrow keys change a closed select immediately; wait for Enter or blur so keyboard users can browse.
+      select.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          submit();
+        } else if (event.key !== 'Tab') {
+          pendingKeyboardChange = true;
+        }
+      });
+      select.addEventListener('pointerdown', function () {
+        pendingKeyboardChange = false;
+      });
+      select.addEventListener('change', function () {
+        if (!pendingKeyboardChange) submit();
+      });
+      select.addEventListener('blur', function () {
+        if (pendingKeyboardChange) submit();
+      });
     }
 
-    footer .footer__links,
-    footer .footer__payment {
-      justify-content: center;
+    var newsletter = footer.querySelector('[data-footer-newsletter]');
+    if (newsletter) {
+      var email = newsletter.querySelector('input[type="email"]');
+      var field = email.parentElement;
+      var status = newsletter.querySelector('[data-footer-newsletter-status]');
+
+      function setError(message) {
+        field.classList.toggle('site-footer__field--error', !!message);
+        status.classList.remove('site-footer__form-status--success');
+        status.classList.toggle('site-footer__form-status--error', !!message);
+        status.textContent = message;
+        if (message) {
+          email.setAttribute('aria-invalid', 'true');
+        } else {
+          email.removeAttribute('aria-invalid');
+        }
+      }
+
+      newsletter.addEventListener('submit', function (event) {
+        email.value = email.value.trim();
+        if (email.validity.valid) return;
+        event.preventDefault();
+        setError(email.validity.valueMissing ? 'Please enter your email address.' : 'Please enter a valid email address.');
+        email.focus();
+      });
+
+      email.addEventListener('input', function () {
+        if (email.hasAttribute('aria-invalid')) setError('');
+      });
+
+      if (status.hasAttribute('data-state')) {
+        status.scrollIntoView({ block: 'center' });
+        status.focus({ preventScroll: true });
+      }
     }
-  }
-{% endstylesheet %}
+  })();
+</script>
 
 {% schema %}
 {
-  "name": "t:general.footer",
+  "name": "Footer",
+  "class": "section-footer",
   "settings": [
     {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Heading",
+      "default": "Contact"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_store_contact",
+      "label": "Use store address, phone and email",
+      "info": "Pulls the details from Settings → Store details instead of the fields below.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "contact_name",
+      "label": "Name",
+      "default": "Lūmen Studio"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_address",
+      "label": "Address",
+      "default": "94A Oxford St\nPaddington NSW 2021\nAustralia"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone",
+      "default": "+61 2 8005 1234"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email",
+      "default": "hello@lumen-skincare.com"
+    },
+    {
+      "type": "text",
+      "id": "contact_note",
+      "label": "Note",
+      "info": "Small line under the contact details. Leave empty to hide.",
+      "default": "Demo details for a portfolio store."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Show country/currency selector",
+      "info": "Uses the countries enabled in Settings → Markets.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "text",
+      "id": "shop_heading",
+      "label": "Shop heading",
+      "default": "Shop"
+    },
+    {
       "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "id": "shop_menu",
+      "label": "Shop menu",
+      "info": "Without a menu, links to all products, best sellers, new arrivals and any Skincare or Sets collection are shown."
+    },
+    {
+      "type": "text",
+      "id": "help_heading",
+      "label": "Help heading",
+      "default": "Help"
+    },
+    {
+      "type": "link_list",
+      "id": "help_menu",
+      "label": "Help menu",
+      "info": "Without a menu, the FAQ and Contact pages and every published store policy are shown."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "info": "Subscribers are added to Customers with email marketing consent.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Heading",
+      "default": "Get on the list"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Text",
+      "default": "Subscribe for exclusive offers, early access, and skincare updates."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success",
+      "label": "Success message",
+      "default": "Thank you. You're on the list."
+    },
+    {
+      "type": "header",
+      "content": "Social links",
+      "info": "Icons appear only for platforms with a link."
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "social_tiktok",
+      "label": "TikTok"
+    },
+    {
+      "type": "header",
+      "content": "Bottom"
+    },
+    {
+      "type": "text",
+      "id": "copyright_name",
+      "label": "Copyright name",
+      "default": "Lūmen"
     },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
+      "label": "Show payment icons",
+      "info": "Shows the payment methods enabled for the store.",
       "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Large logo",
+      "info": "Defaults to the grey Lūmen logo."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Large logo width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
     }
   ]
 }
