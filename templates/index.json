@@ -47,11 +47,96 @@
         "before_label": "Before",
         "after_label": "After"
       }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "image_asset": "test1.jpg",
+            "image_alt": "Woman with a towel wrapped around her hair smoothing moisturizer onto her cheek",
+            "image_position": "50% 50%",
+            "rating": 5,
+            "quote": "The texture feels rich without ever being heavy. It sinks in while I finish getting ready, and my skin still feels soft by the end of the day.",
+            "customer_name": "Maya Bennett",
+            "product": "lumen-daily-hydration-cream",
+            "product_label": ""
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "image_asset": "test2.jpg",
+            "image_alt": "Smiling woman with closed eyes smoothing cream onto her cheeks against a warm orange backdrop",
+            "image_position": "50% 50%",
+            "rating": 5,
+            "quote": "Finally a sunscreen I look forward to wearing. It settles in quickly and sits comfortably under makeup, with no heavy sunscreen feel.",
+            "customer_name": "Sofia Laurent",
+            "product": "lumen-daily-defense-spf-50",
+            "product_label": ""
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "image_asset": "test3.jpg",
+            "image_alt": "Woman with long brown hair applying serum with a dropper in front of a mirror",
+            "image_position": "50% 50%",
+            "rating": 5,
+            "quote": "The serum has such a beautiful, lightweight texture. A couple of drops and my skin feels fresh and hydrated, never sticky.",
+            "customer_name": "Nora Ellis",
+            "product": "lumen-hydrating-serum",
+            "product_label": ""
+          }
+        },
+        "testimonial_4": {
+          "type": "testimonial",
+          "settings": {
+            "image_asset": "test4.jpg",
+            "image_alt": "Hands blending a swirl of cream together against a warm orange backdrop",
+            "image_position": "50% 50%",
+            "rating": 5,
+            "quote": "I keep it by the door so I never skip it. It blends in easily and leaves my skin feeling comfortable all day.",
+            "customer_name": "Amelia Hart",
+            "product": "lumen-daily-defense-spf-50",
+            "product_label": ""
+          }
+        },
+        "testimonial_5": {
+          "type": "testimonial",
+          "settings": {
+            "image_asset": "test5.jpg",
+            "image_alt": "Smiling woman spraying facial mist toward her face against a teal backdrop",
+            "image_position": "30% 50%",
+            "rating": 5,
+            "quote": "My favorite little pause in the afternoon. The mist is so fine and gentle, and my face feels instantly refreshed.",
+            "customer_name": "Clara Morgan",
+            "product": "lumen-facial-mist",
+            "product_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3",
+        "testimonial_4",
+        "testimonial_5"
+      ],
+      "settings": {
+        "heading": "Our customers are saying",
+        "text": "Real routines. Real rituals. Lūmen moments.",
+        "footnote": "",
+        "autoplay": false,
+        "autoplay_speed": 8
+      }
     }
   },
   "order": [
     "hero",
     "best_sellers",
-    "skin_comparison"
+    "skin_comparison",
+    "testimonials"
   ]
 }

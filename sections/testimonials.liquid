@@ -1,0 +1,287 @@
+{{ 'testimonials.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'testimonials.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign heading_id = 'TestimonialsHeading-' | append: section.id
+  assign slide_count = section.blocks.size
+  assign image_sizes = '(min-width: 1100px) 520px, (min-width: 750px) 42vw, 86vw'
+  # Theme assets have unknown proportions; a landscape file cropped into the 4:5 frame needs ~1.5x the width.
+  assign asset_sizes = '(min-width: 1100px) 780px, (min-width: 750px) 63vw, 130vw'
+-%}
+
+<section
+  class="testimonials full-width"
+  aria-labelledby="{{ heading_id }}"
+  data-testimonials
+  {% if section.settings.autoplay %}
+    data-autoplay="{{ section.settings.autoplay_speed | times: 1000 }}"
+  {% endif %}
+>
+  <div class="testimonials__inner">
+    <header class="testimonials__header">
+      <h2 class="testimonials__heading" id="{{ heading_id }}">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p class="testimonials__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if slide_count > 0 -%}
+      <div
+        class="testimonials__carousel"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="{{ section.settings.heading | escape }}"
+      >
+        <div class="testimonials__viewport" data-testimonials-viewport>
+          <ul class="testimonials__track" role="list" data-testimonials-track style="--tm-index: 0;">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                assign product = block.settings.product
+                assign product_label = block.settings.product_label | default: product.title
+                assign image_alt = block.settings.image.alt | default: block.settings.image_alt | escape
+                assign rating = block.settings.rating
+              -%}
+              <li
+                class="testimonials__slide{% if forloop.first %} is-active{% endif %}"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="{{ forloop.index }} of {{ slide_count }}"
+                {% unless forloop.first %}
+                  aria-hidden="true"
+                {% endunless %}
+                data-testimonials-slide
+                {{ block.shopify_attributes }}
+              >
+                <div class="testimonials__media" style="--tm-focus: {{ block.settings.image_position }};">
+                  {%- if block.settings.image != blank -%}
+                    {{
+                      block.settings.image
+                      | image_url: width: 1200
+                      | image_tag:
+                        class: 'testimonials__image',
+                        widths: '480, 720, 960, 1200',
+                        sizes: image_sizes,
+                        loading: 'lazy',
+                        draggable: 'false',
+                        alt: image_alt
+                    }}
+                  {%- elsif block.settings.image_asset != blank -%}
+                    {%- assign asset_name = block.settings.image_asset -%}
+                    <img
+                      class="testimonials__image"
+                      src="{{ asset_name | asset_img_url: '960x' }}"
+                      srcset="
+                        {{ asset_name | asset_img_url: '480x' }} 480w,
+                        {{ asset_name | asset_img_url: '720x' }} 720w,
+                        {{ asset_name | asset_img_url: '960x' }} 960w,
+                        {{ asset_name | asset_img_url: '1200x' }} 1200w,
+                        {{ asset_name | asset_img_url: '1600x' }} 1600w,
+                        {{ asset_name | asset_img_url: '2000x' }} 2000w
+                      "
+                      sizes="{{ asset_sizes }}"
+                      alt="{{ image_alt }}"
+                      width="960"
+                      height="1200"
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                    >
+                  {%- endif -%}
+                </div>
+
+                <figure class="testimonials__content">
+                  <p class="testimonials__rating" aria-label="Rated {{ rating }} out of 5">
+                    {%- for i in (1..5) -%}
+                      <span class="testimonials__star{% if i > rating %} testimonials__star--empty{% endif %}" aria-hidden="true">★</span>
+                    {%- endfor -%}
+                  </p>
+
+                  <blockquote class="testimonials__quote">
+                    <p>&ldquo;{{ block.settings.quote | escape }}&rdquo;</p>
+                  </blockquote>
+
+                  <figcaption class="testimonials__meta">
+                    <span class="testimonials__name">{{ block.settings.customer_name | escape }}</span>
+                    {%- if product_label != blank -%}
+                      {%- if product != blank -%}
+                        <a class="testimonials__product" href="{{ product.url }}"{% unless forloop.first %} tabindex="-1"{% endunless %}>
+                          {{- product_label | escape -}}
+                        </a>
+                      {%- else -%}
+                        <span class="testimonials__product">{{ product_label | escape }}</span>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </figcaption>
+                </figure>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+
+        {%- if slide_count > 1 -%}
+          <div class="testimonials__controls">
+            <button class="testimonials__arrow" type="button" data-testimonials-prev aria-label="Previous testimonial" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 12H5"/><path d="m10.5 6.5-5.5 5.5 5.5 5.5"/>
+              </svg>
+            </button>
+
+            <div class="testimonials__pagination">
+              {%- for block in section.blocks -%}
+                <button
+                  class="testimonials__dot"
+                  type="button"
+                  data-testimonials-dot
+                  aria-label="Show testimonial {{ forloop.index }} of {{ slide_count }}"
+                  {% if forloop.first %}
+                    aria-current="true"
+                  {% endif %}
+                ></button>
+              {%- endfor -%}
+            </div>
+
+            <button class="testimonials__arrow" type="button" data-testimonials-next aria-label="Next testimonial">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"/><path d="m13.5 6.5 5.5 5.5-5.5 5.5"/>
+              </svg>
+            </button>
+          </div>
+        {%- endif -%}
+
+        <p class="testimonials__status" aria-live="polite" aria-atomic="true" data-testimonials-status></p>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.footnote != blank -%}
+      <p class="testimonials__footnote">{{ section.settings.footnote | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "div",
+  "class": "section-testimonials",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our customers are saying"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Supporting text"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Footnote",
+      "info": "Optional small print below the carousel, e.g. to note that testimonials are sample content."
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance slides",
+      "info": "Pauses on hover, focus and touch. Always off for visitors who prefer reduced motion.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Seconds per slide",
+      "min": 5,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Theme asset image",
+          "info": "File name in the theme's assets folder, used when no image is selected above."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image crop position",
+          "options": [
+            { "value": "50% 50%", "label": "Center" },
+            { "value": "50% 20%", "label": "Top" },
+            { "value": "30% 50%", "label": "Left" },
+            { "value": "70% 50%", "label": "Right" }
+          ],
+          "default": "50% 50%"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "The texture is so light and comfortable that it has become one of the easiest steps in my morning routine."
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer name",
+          "default": "Customer name"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "The product name links to this product's page."
+        },
+        {
+          "type": "text",
+          "id": "product_label",
+          "label": "Product name",
+          "info": "Leave empty to use the product's title."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}
