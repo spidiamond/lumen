@@ -68,6 +68,7 @@
         "testimonial_2": {
           "type": "testimonial",
           "settings": {
+            "image": "shopify://shop_images/test2_52822262-978d-4bf8-82a6-079f9a68b847.jpg",
             "image_asset": "test2.jpg",
             "image_alt": "Smiling woman with closed eyes smoothing cream onto her cheeks against a warm orange backdrop",
             "image_position": "50% 50%",
@@ -95,6 +96,7 @@
         "testimonial_4": {
           "type": "testimonial",
           "settings": {
+            "image": "shopify://shop_images/test4.jpg",
             "image_asset": "test4.jpg",
             "image_alt": "Hands blending a swirl of cream together against a warm orange backdrop",
             "image_position": "50% 50%",
@@ -108,6 +110,7 @@
         "testimonial_5": {
           "type": "testimonial",
           "settings": {
+            "image": "shopify://shop_images/test5.jpg",
             "image_asset": "test5.jpg",
             "image_alt": "Smiling woman spraying facial mist toward her face against a teal backdrop",
             "image_position": "30% 50%",
