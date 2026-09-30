@@ -54,6 +54,7 @@
         "testimonial_1": {
           "type": "testimonial",
           "settings": {
+            "image": "shopify://shop_images/test1.jpg",
             "image_asset": "test1.jpg",
             "image_alt": "Woman with a towel wrapped around her hair smoothing moisturizer onto her cheek",
             "image_position": "50% 50%",
@@ -80,6 +81,7 @@
         "testimonial_3": {
           "type": "testimonial",
           "settings": {
+            "image": "shopify://shop_images/test3.jpg",
             "image_asset": "test3.jpg",
             "image_alt": "Woman with long brown hair applying serum with a dropper in front of a mirror",
             "image_position": "50% 50%",
