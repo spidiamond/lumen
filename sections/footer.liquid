@@ -302,8 +302,10 @@
         </div>
       {%- endif -%}
     </div>
+  </div>
 
-    <div class="site-footer__bar">
+  <div class="site-footer__bar">
+    <div class="site-footer__inner site-footer__bar-inner">
       <p class="site-footer__copyright">
         &copy; {{ 'now' | date: '%Y' }}
         {{ section.settings.copyright_name | default: shop.name }}
@@ -320,8 +322,9 @@
         </div>
       {%- endif -%}
     </div>
+  </div>
 
-    <div class="site-footer__mark" style="--footer-logo-width: {{ section.settings.logo_width }}%;">
+  <div class="site-footer__inner site-footer__mark" style="--footer-logo-width: {{ section.settings.logo_width }}%;">
       {%- if section.settings.logo != blank -%}
         {{
           section.settings.logo
@@ -329,7 +332,7 @@
           | image_tag:
             class: 'site-footer__logo',
             widths: '600, 900, 1200, 1600, 2000, 2400',
-            sizes: '(min-width: 1440px) 1320px, 92vw',
+            sizes: '(min-width: 1100px) 960px, 86vw',
             alt: '',
             loading: 'lazy'
         }}
@@ -344,7 +347,6 @@
           decoding="async"
         >
       {%- endif -%}
-    </div>
   </div>
 </footer>
 
