@@ -37,6 +37,7 @@
         "social_tiktok": "",
         "copyright_name": "Lūmen",
         "show_payment_icons": true,
+        "logo": "shopify://shop_images/logo-grey.svg",
         "logo_width": 100
       }
     }
