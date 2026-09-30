@@ -1,8 +1,6 @@
 {{ 'shop.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'shop.js' | asset_url }}" defer></script>
 
 {%- liquid
-  assign columns = section.settings.columns_desktop | default: 3
   assign lead = section.settings.heading_lead
   assign accent = section.settings.heading_accent
   assign banner_position = section.settings.banner_position | default: 'center 42%'
@@ -68,7 +66,7 @@
         <p class="shop__empty">There are no products in this collection yet.</p>
       {%- else -%}
         <ul
-          class="shop__grid shop__grid--cols-{{ columns }}"
+          class="shop__grid"
           role="list"
           data-shop-grid
           {% if section.settings.show_label and section.settings.label != blank %}
@@ -85,7 +83,7 @@
             <li class="shop__item" data-shop-item>
               {% render 'product-card',
                 product: product,
-                sizes: '(min-width: 1100px) 28vw, 46vw',
+                sizes: '(min-width: 1100px) 22vw, 46vw',
                 loading: card_loading
               %}
             </li>
@@ -170,23 +168,13 @@
       "type": "checkbox",
       "id": "show_label",
       "label": "Show label",
-      "default": true
+      "default": false
     },
     {
       "type": "text",
       "id": "label",
       "label": "Label",
       "default": "All essentials"
-    },
-    {
-      "type": "range",
-      "id": "columns_desktop",
-      "min": 2,
-      "max": 4,
-      "step": 1,
-      "label": "Products per row on desktop",
-      "default": 3,
-      "info": "Tablet and phone always show two per row. A row with a single product is centered."
     }
   ]
 }

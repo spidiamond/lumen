@@ -2,8 +2,7 @@
   Shop page, rendered on collection templates. The header Shop link opens
   the all-products collection, which uses this section.
 
-  Hover scaling is transform-only and is applied by assets/shop.js to the
-  hovered product and the other products in the same visual row.
+  Hover only scales the photo inside its rounded frame. The card size stays put.
 */
 
 .section-shop {
@@ -14,8 +13,6 @@
   --shop-ink: var(--header-ink, #161616);
   --shop-muted: #6d645b;
   --shop-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --shop-scale-up: 1.05;
-  --shop-scale-down: 0.97;
 
   background: var(--page-cream, #f3efe8);
   color: var(--shop-ink);
@@ -122,8 +119,7 @@
   display: grid;
   grid-template-columns: repeat(var(--shop-columns), minmax(0, 1fr));
   align-items: start;
-  column-gap: 0;
-  row-gap: clamp(16px, 2vw, 28px);
+  gap: clamp(22px, 2.4vw, 36px) clamp(12px, 1.1vw, 18px);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -131,9 +127,7 @@
 
 .shop__item {
   position: relative;
-  z-index: 1;
   min-width: 0;
-  transform: scale(1);
 }
 
 .shop__empty {
@@ -144,36 +138,10 @@
   color: var(--shop-muted);
 }
 
-/* A lone product in the last row sits in the middle of that row. */
+/* Desktop: four cards, then the remaining three on the next row. */
 @media (min-width: 1100px) {
-  .shop__grid--cols-2 {
-    --shop-columns: 2;
-  }
-
-  .shop__grid--cols-3 {
-    --shop-columns: 3;
-  }
-
-  .shop__grid--cols-4 {
+  .shop__grid {
     --shop-columns: 4;
-  }
-
-  .shop__grid--cols-2 > .shop__item:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: 50%;
-  }
-
-  .shop__grid--cols-3 > .shop__item:last-child:nth-child(3n + 1) {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: calc(100% / 3);
-  }
-
-  .shop__grid--cols-4 > .shop__item:last-child:nth-child(4n + 1) {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: 25%;
   }
 }
 
@@ -195,8 +163,9 @@
 
 .shop .product-card__media {
   position: relative;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: 16px;
   background: #ebe6de;
 }
 
@@ -223,40 +192,24 @@
 }
 
 .shop .product-card__image--secondary {
-  opacity: 0;
-}
-
-.shop .product-card__badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 2;
-  padding: 5px 8px 4px;
-  background: rgb(255 255 255 / 0.9);
-  color: var(--shop-ink);
-  font-family: var(--nav-font);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  line-height: 1;
-  text-transform: uppercase;
-  pointer-events: none;
+  display: none;
 }
 
 .shop .product-card__info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  padding: 14px 14px 0;
+  align-items: center;
+  padding: 14px 6px 0;
+  text-align: center;
 }
 
 .shop .product-card__title {
   margin: 0;
   font-family: var(--nav-font);
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 700;
   line-height: 1.35;
-  letter-spacing: 0.005em;
+  letter-spacing: 0;
 }
 
 .shop .product-card__link {
@@ -269,32 +222,12 @@
   outline-offset: 4px;
 }
 
-.shop .product-card__title-text {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  background-size: 0% 1px;
-  padding-bottom: 2px;
-}
-
 .shop .product-card__price {
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  color: var(--shop-muted);
-  font-family: var(--nav-font);
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  display: none;
 }
 
-.shop .product-card__price-current--sale {
-  color: #8a3b2a;
-}
-
-.shop .product-card__price-compare {
-  color: var(--shop-muted);
+.shop .product-card__badge {
+  display: none;
 }
 
 /* Browsing stays primary. The form still posts to the cart without CSS. */
@@ -317,35 +250,14 @@
 /* --------------------------------------------------------------- Hover */
 
 @media (hover: hover) and (pointer: fine) {
-  .shop__item {
-    transition: transform 580ms var(--shop-ease);
+  .shop .product-card__image--primary {
+    transform: scale(1);
+    transition: transform 560ms var(--shop-ease);
   }
 
-  .shop__item.is-focus {
-    z-index: 10;
-    transform: scale(var(--shop-scale-up));
-  }
-
-  .shop__item.is-retreat {
-    transform: scale(var(--shop-scale-down));
-  }
-
-  .shop .product-card__image {
-    transition: opacity 520ms var(--shop-ease);
-  }
-
-  .shop__item.is-focus .product-card--has-hover .product-card__image--primary {
-    opacity: 0;
-  }
-
-  .shop__item.is-focus .product-card--has-hover .product-card__image--secondary {
-    opacity: 1;
-  }
-
-  .shop__item.is-focus .product-card__title-text,
-  .shop .product-card__link:focus-visible .product-card__title-text {
-    background-size: 100% 1px;
-    transition: background-size 380ms var(--shop-ease);
+  .shop__item:hover .product-card__image--primary,
+  .shop__item:focus-within .product-card__image--primary {
+    transform: scale(1.06);
   }
 
   .shop-banner__image {
@@ -355,10 +267,6 @@
   .shop-banner__media:hover .shop-banner__image {
     transform: scale(1.02);
   }
-}
-
-.shop .product-card__link:focus-visible .product-card__title-text {
-  background-size: 100% 1px;
 }
 
 /* ------------------------------------------------------------ Pagination */
@@ -434,9 +342,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop__item,
-  .shop__item.is-focus,
-  .shop__item.is-retreat,
+  .shop .product-card__image--primary,
+  .shop__item:hover .product-card__image--primary,
+  .shop__item:focus-within .product-card__image--primary,
   .shop-banner__zoom,
   .shop-banner__image,
   .shop-banner__media:hover .shop-banner__image {
@@ -467,8 +375,8 @@
     font-size: clamp(28px, 7.4vw, 36px);
   }
 
-  .shop .product-card__info {
-    padding-inline: 10px;
+  .shop .product-card__media {
+    border-radius: 12px;
   }
 
   .shop .product-card__title {
