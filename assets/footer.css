@@ -436,7 +436,12 @@
 
 .site-footer__logo {
   display: block;
-  width: min(var(--footer-logo-width, 100%), 960px);
+  /* The last cap keeps footer plus navbar within one screen (about 420px of the footer is not logo). */
+  width: min(
+    var(--footer-logo-width, 100%),
+    960px,
+    max(200px, (100svh - var(--header-height, 76px) - 420px) * 3.73)
+  );
   max-width: 100%;
   height: auto;
   margin-inline: auto;
@@ -458,7 +463,32 @@
 @media (max-width: 599px) {
   .site-footer__grid {
     column-gap: 20px;
-    row-gap: 36px;
+    row-gap: 28px;
+    padding-block: 32px 24px;
+  }
+
+  .site-footer__heading {
+    margin-bottom: 12px;
+  }
+
+  .site-footer__contact {
+    gap: 12px;
+  }
+
+  .site-footer__contact-name + .site-footer__contact-address {
+    margin-top: -12px;
+  }
+
+  .site-footer__list {
+    gap: 6px;
+  }
+
+  .site-footer__column--newsletter .site-footer__text {
+    margin-bottom: 12px;
+  }
+
+  .site-footer__bar-inner {
+    padding-block: 16px;
   }
 
   .site-footer__column--contact,

@@ -18,20 +18,39 @@
   --sc-hit-width: 56px;
   --sc-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--header-height, 76px));
+  min-height: calc(100svh - var(--header-height, 76px));
   background: var(--page-cream, #f3efe8);
   color: var(--sc-ink);
 }
 
 .skin-compare__inner {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
   max-width: 1600px;
   margin-inline: auto;
-  padding: clamp(32px, 4vw, 64px) var(--sc-gutter) clamp(96px, 10vw, 160px);
+  padding: clamp(24px, 5svh, 72px) var(--sc-gutter) clamp(24px, 6svh, 80px);
 }
 
 .skin-compare__header {
+  flex: none;
   max-width: 640px;
-  margin: 0 auto clamp(36px, 4.2vw, 64px);
+  margin: 0 auto clamp(20px, 4svh, 56px);
   text-align: center;
+}
+
+/* Takes the height left in the screen; the frame is sized to fit inside it. */
+.skin-compare__stage {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  container-type: size;
 }
 
 .skin-compare__heading {
@@ -55,15 +74,12 @@
   color: var(--sc-muted);
 }
 
-/*
-  Width is capped three ways: the content column, 1320px, and whatever
-  width keeps the whole image visible under the navbar on short screens.
-*/
+/* Width is capped by the content column, 1320px, and the height of the stage. */
 .skin-compare__frame {
   position: relative;
-  width: min(100%, 1320px, max(320px, calc((100svh - var(--header-height, 76px) - 72px) * 1678 / 937)));
+  flex: none;
+  width: min(100cqw, 1320px, 100cqh * var(--sc-ratio));
   aspect-ratio: var(--sc-ratio);
-  margin-inline: auto;
   background: #d8cdc0;
   cursor: ew-resize;
   touch-action: pan-y;
@@ -192,12 +208,6 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 1099px) {
-  .skin-compare__frame {
-    width: 100%;
-  }
-}
-
 /* Phones get a taller 4:3 crop so the face stays readable; both layers share it. */
 @media (max-width: 749px) {
   .skin-compare {
@@ -206,12 +216,11 @@
   }
 
   .skin-compare__inner {
-    padding-top: 24px;
-    padding-bottom: 88px;
+    padding-block: clamp(24px, 4svh, 48px);
   }
 
   .skin-compare__header {
-    margin-bottom: 28px;
+    margin-bottom: clamp(16px, 3svh, 28px);
   }
 
   .skin-compare__heading {
