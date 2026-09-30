@@ -5,6 +5,28 @@
   margin-top: auto;
 }
 
+/*
+  Reveal: the footer stays pinned to the bottom of the viewport underneath
+  the page, and the content sections scroll up off it. Only enabled (by the
+  footer script) while the footer fits in the viewport, otherwise its top
+  would never be reachable.
+*/
+.footer-reveal .shopify-section:has(> .site-footer) {
+  position: sticky;
+  bottom: 0;
+  z-index: 0;
+}
+
+.footer-reveal body > .shopify-section:not(.shopify-section-group-header-group, .shopify-section-group-footer-group) {
+  position: relative;
+  z-index: 1;
+  background-color: var(--color-background);
+}
+
+.footer-reveal body > .shopify-section:has(+ .shopify-section-group-footer-group) {
+  box-shadow: 0 28px 56px -24px rgb(0 0 0 / 0.55);
+}
+
 .site-footer {
   --sf-bg: #1a1a1a;
   --sf-ink: #f2ece3;

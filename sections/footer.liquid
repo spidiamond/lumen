@@ -355,6 +355,14 @@
     var footer = document.currentScript && document.currentScript.previousElementSibling;
     if (!footer || !footer.matches('[data-site-footer]')) return;
 
+    var footerSection = footer.parentElement;
+    function updateReveal() {
+      document.documentElement.classList.toggle('footer-reveal', footerSection.offsetHeight <= window.innerHeight);
+    }
+    updateReveal();
+    window.addEventListener('resize', updateReveal);
+    if ('ResizeObserver' in window) new ResizeObserver(updateReveal).observe(footerSection);
+
     var select = footer.querySelector('[data-footer-country]');
     if (select) {
       var initial = select.value;
