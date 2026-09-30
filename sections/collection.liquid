@@ -1,47 +1,193 @@
-{% comment %}
-  This section is used in the collection template to render collection page
-  listing all products within a collection.
+{{ 'shop.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'shop.js' | asset_url }}" defer></script>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
-{% endcomment %}
+{%- liquid
+  assign columns = section.settings.columns_desktop | default: 3
+  assign lead = section.settings.heading_lead
+  assign accent = section.settings.heading_accent
+  assign banner_position = section.settings.banner_position | default: 'center 42%'
+  assign overlay = section.settings.overlay | times: 0.01
+-%}
 
-<h1>{{ collection.title }}</h1>
-
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
-        {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
-        </div>
+<div
+  class="shop full-width"
+  style="--shop-overlay: {{ overlay }}; --shop-banner-position: {{ banner_position }};"
+>
+  <div class="shop-banner">
+    <div class="shop-banner__media">
+      <div class="shop-banner__zoom">
+        {%- if section.settings.banner != blank -%}
+          {%- assign banner_alt = section.settings.banner.alt | default: '' -%}
+          {{
+            section.settings.banner
+            | image_url: width: 2400
+            | image_tag:
+              class: 'shop-banner__image',
+              widths: '750, 1100, 1500, 2000, 2400',
+              sizes: '100vw',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: banner_alt
+          }}
+        {%- else -%}
+          <img
+            class="shop-banner__image"
+            src="{{ 'landscape_banner.jpg' | asset_url }}"
+            alt=""
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchpriority="high"
+          >
+        {%- endif -%}
       </div>
-    {% endfor %}
+      <div class="shop-banner__overlay" aria-hidden="true"></div>
+    </div>
 
-    {{ paginate | default_pagination }}
-  {% endpaginate %}
+    {%- if lead != blank or accent != blank -%}
+      <div class="shop-banner__content">
+        <h1 class="shop-banner__heading">
+          {%- if lead != blank -%}
+            <span class="shop-banner__lead">{{ lead | escape }} </span>
+          {%- endif -%}
+          {%- if accent != blank -%}
+            <span class="shop-banner__accent">{{ accent | escape }}</span>
+          {%- endif -%}
+        </h1>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="shop__catalog">
+    {%- if section.settings.show_label and section.settings.label != blank -%}
+      <h2 class="shop__label" id="ShopLabel-{{ section.id }}">{{ section.settings.label | escape }}</h2>
+    {%- endif -%}
+
+    {%- paginate collection.products by 24 -%}
+      {%- if collection.products_count == 0 -%}
+        <p class="shop__empty">There are no products in this collection yet.</p>
+      {%- else -%}
+        <ul
+          class="shop__grid shop__grid--cols-{{ columns }}"
+          role="list"
+          data-shop-grid
+          {% if section.settings.show_label and section.settings.label != blank %}
+            aria-labelledby="ShopLabel-{{ section.id }}"
+          {% endif %}
+        >
+          {%- for product in collection.products -%}
+            {%- liquid
+              assign card_loading = 'lazy'
+              if forloop.index <= 3
+                assign card_loading = 'eager'
+              endif
+            -%}
+            <li class="shop__item" data-shop-item>
+              {% render 'product-card',
+                product: product,
+                sizes: '(min-width: 1100px) 28vw, 46vw',
+                loading: card_loading
+              %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="shop__pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a class="shop__page-link" href="{{ paginate.previous.url }}">Previous</a>
+          {%- endif -%}
+          <span class="shop__page-status">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+          {%- if paginate.next -%}
+            <a class="shop__page-link" href="{{ paginate.next.url }}">Next</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
 </div>
-
-{% stylesheet %}
-  .collection-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.collection",
-  "settings": []
+  "name": "Shop",
+  "tag": "div",
+  "class": "section-shop",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner",
+      "label": "Banner image",
+      "info": "Leave empty to use the theme's landscape banner."
+    },
+    {
+      "type": "text",
+      "id": "heading_lead",
+      "label": "Heading",
+      "default": "Discover"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading, italic",
+      "default": "Skincare Essentials"
+    },
+    {
+      "type": "range",
+      "id": "overlay",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "label": "Banner overlay",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "banner_position",
+      "label": "Banner image position",
+      "default": "center 42%",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "center 30%", "label": "Upper center" },
+        { "value": "center 42%", "label": "Slightly above center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_label",
+      "label": "Show label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "All essentials"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Products per row on desktop",
+      "default": 3,
+      "info": "Tablet and phone always show two per row. A row with a single product is centered."
+    }
+  ]
 }
 {% endschema %}
