@@ -27,7 +27,7 @@
   flex-direction: column;
   min-height: calc(100vh - var(--header-height, 76px));
   min-height: calc(100svh - var(--header-height, 76px));
-  background: var(--page-cream, #f3efe8);
+  background: transparent;
   color: var(--bs-ink);
 }
 

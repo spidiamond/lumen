@@ -20,7 +20,9 @@
 .footer-reveal body > .shopify-section:not(.shopify-section-group-header-group, .shopify-section-group-footer-group) {
   position: relative;
   z-index: 1;
-  background-color: var(--color-background);
+  background-color: #f4ece4;
+  background-image: var(--page-gradient);
+  background-attachment: fixed;
 }
 
 .footer-reveal body > .shopify-section:has(+ .shopify-section-group-footer-group) {

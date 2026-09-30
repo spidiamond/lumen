@@ -23,6 +23,13 @@
   --header-ink: #161616;
   --hero-ink: #ffffff;
   --page-cream: #f3efe8;
+  --page-gradient: linear-gradient(165deg, #fbf8f4 0%, #f4ece4 42%, #f0e2da 70%, #e7ddd2 100%);
+}
+
+body {
+  background-color: #f4ece4;
+  background-image: var(--page-gradient);
+  background-attachment: fixed;
 }
 
 @media (max-width: 1099px) {
