@@ -40,6 +40,10 @@
       "settings": {
         "heading": "See the difference.",
         "text": "A closer look at skin that feels refreshed, smooth, and naturally radiant.",
+        "before_image": "shopify://shop_images/before_skin.png",
+        "before_alt": "Portrait of a woman before, with visible blemishes and uneven skin texture",
+        "after_image": "shopify://shop_images/after_skin.png",
+        "after_alt": "The same portrait after, with skin that looks smoother, clearer and more even",
         "before_label": "Before",
         "after_label": "After"
       }
