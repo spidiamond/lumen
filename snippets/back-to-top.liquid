@@ -1,0 +1,38 @@
+{{ 'back-to-top.css' | asset_url | stylesheet_tag }}
+
+<button
+  class="lumen-back-to-top"
+  type="button"
+  data-back-to-top
+  aria-label="Back to top"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <svg class="lumen-back-to-top__ring" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+    <circle class="lumen-back-to-top__track" cx="24" cy="24" r="22"></circle>
+    <circle
+      class="lumen-back-to-top__progress"
+      cx="24"
+      cy="24"
+      r="22"
+      pathLength="100"
+      stroke-dasharray="100"
+      stroke-dashoffset="100"
+    ></circle>
+  </svg>
+
+  <span class="lumen-back-to-top__arrows">
+    <span class="lumen-back-to-top__arrow lumen-back-to-top__arrow--primary">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 19V6M7 11l5-5 5 5"></path>
+      </svg>
+    </span>
+    <span class="lumen-back-to-top__arrow lumen-back-to-top__arrow--secondary">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 19V6M7 11l5-5 5 5"></path>
+      </svg>
+    </span>
+  </span>
+</button>
+
+<script src="{{ 'back-to-top.js' | asset_url }}" defer></script>

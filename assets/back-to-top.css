@@ -1,0 +1,152 @@
+/*
+  Global back-to-top control. Fixed, so it takes no space in the page.
+  The ring is real scroll progress. The arrows swap on hover.
+*/
+
+.lumen-back-to-top {
+  --back-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --back-ink: var(--header-ink, #161616);
+  --back-track: #d5d5d5;
+
+  position: fixed;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--back-ink);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.85);
+  transition:
+    opacity 280ms var(--back-ease),
+    transform 280ms var(--back-ease),
+    visibility 0s linear 280ms;
+}
+
+.lumen-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  transition:
+    opacity 280ms var(--back-ease),
+    transform 280ms var(--back-ease),
+    visibility 0s;
+}
+
+.lumen-back-to-top:focus-visible {
+  outline: 2px solid var(--back-ink);
+  outline-offset: 4px;
+}
+
+.lumen-back-to-top__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.lumen-back-to-top__track,
+.lumen-back-to-top__progress {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.lumen-back-to-top__track {
+  stroke: var(--back-track);
+}
+
+.lumen-back-to-top__progress {
+  stroke: var(--back-ink);
+  stroke-linecap: round;
+}
+
+.lumen-back-to-top__arrows {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lumen-back-to-top__arrow {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  transition: transform 420ms var(--back-ease);
+}
+
+.lumen-back-to-top__arrow svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.lumen-back-to-top__arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lumen-back-to-top__arrow--secondary {
+  transform: translateY(100%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lumen-back-to-top.is-visible:hover {
+    transform: scale(1.03);
+  }
+
+  .lumen-back-to-top:hover .lumen-back-to-top__arrow--primary,
+  .lumen-back-to-top:focus-visible .lumen-back-to-top__arrow--primary {
+    transform: translateY(-100%);
+  }
+
+  .lumen-back-to-top:hover .lumen-back-to-top__arrow--secondary,
+  .lumen-back-to-top:focus-visible .lumen-back-to-top__arrow--secondary {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 749px) {
+  .lumen-back-to-top {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lumen-back-to-top,
+  .lumen-back-to-top__arrow {
+    transition: none;
+  }
+
+  .lumen-back-to-top.is-visible:hover,
+  .lumen-back-to-top:hover .lumen-back-to-top__arrow--primary,
+  .lumen-back-to-top:focus-visible .lumen-back-to-top__arrow--primary,
+  .lumen-back-to-top:hover .lumen-back-to-top__arrow--secondary,
+  .lumen-back-to-top:focus-visible .lumen-back-to-top__arrow--secondary {
+    transform: none;
+  }
+
+  .lumen-back-to-top__arrow--secondary {
+    visibility: hidden;
+  }
+}
