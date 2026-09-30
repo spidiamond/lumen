@@ -1,0 +1,313 @@
+<header class="site-header full-width header--hero" data-site-header>
+  <div class="site-header__surface" aria-hidden="true"></div>
+
+  {%- comment -%}
+    Fixed wordmark. It starts centered in the hero and scales into this
+    header, so it has to live here: above the white bar, below the links.
+  {%- endcomment -%}
+  <div class="logo-flight" data-logo-flight>
+    <img
+      class="logo-flight__light"
+      data-logo-light
+      src="{{ 'logo-light.svg' | asset_url }}"
+      alt=""
+      width="163"
+      height="44"
+    >
+    <img
+      class="logo-flight__dark"
+      data-logo-dark
+      src="{{ 'logo-dark.svg' | asset_url }}"
+      alt=""
+      width="163"
+      height="44"
+    >
+  </div>
+
+  {%- liquid
+    assign shop_url = section.settings.shop_link | default: routes.all_products_collection_url
+    assign about_url = section.settings.about_link | default: pages.about.url | default: '/pages/about'
+    assign contact_url = section.settings.contact_link | default: pages.contact.url | default: '/pages/contact'
+  -%}
+
+  <div class="site-menu" id="SiteMenu" data-site-menu aria-hidden="true" inert>
+    <nav class="site-menu__nav" aria-label="Mobile">
+      <ul class="site-menu__list" role="list">
+        <li class="site-menu__item" style="--menu-index: 0;">
+          <a class="site-menu__link" href="{{ shop_url }}">{{ section.settings.shop_label }}</a>
+        </li>
+        <li class="site-menu__item" style="--menu-index: 1;">
+          <a class="site-menu__link" href="{{ about_url }}">{{ section.settings.about_label }}</a>
+        </li>
+        <li class="site-menu__item" style="--menu-index: 2;">
+          <a class="site-menu__link" href="{{ contact_url }}">{{ section.settings.contact_label }}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="site-header__bar">
+    <div class="site-header__start">
+      <button
+        class="site-header__menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-controls="SiteMenu"
+        aria-expanded="false"
+        aria-label="Open menu"
+      >
+        <span class="site-header__menu-line" aria-hidden="true"></span>
+        <span class="site-header__menu-line" aria-hidden="true"></span>
+      </button>
+
+      <nav class="site-header__links" aria-label="Primary">
+        <a class="site-header__link" href="{{ shop_url }}">
+          {{ section.settings.shop_label }}
+        </a>
+        <a class="site-header__link" href="{{ about_url }}">
+          {{ section.settings.about_label }}
+        </a>
+        <a class="site-header__link" href="{{ contact_url }}">
+          {{ section.settings.contact_label }}
+        </a>
+      </nav>
+    </div>
+
+    {%- comment -%}
+      Invisible size and position target for the flying hero logo.
+      The dark wordmark fades in here only after the scroll handoff,
+      so the hero logo and the navbar logo never show as two objects.
+    {%- endcomment -%}
+    <a class="site-header__logo-slot" data-logo-slot href="{{ routes.root_url }}">
+      <img
+        class="site-header__logo"
+        src="{{ 'logo-dark.svg' | asset_url }}"
+        alt="{{ shop.name }}"
+        width="163"
+        height="44"
+      >
+    </a>
+
+    <div class="site-header__end">
+      {%- liquid
+        assign popular_currencies = 'USD,EUR,GBP,AUD,CAD,JPY,INR' | split: ','
+        assign currency_countries = 'US,DE,GB,AU,CA,JP,IN' | split: ','
+        assign active_currency = localization.country.currency.iso_code
+        assign active_flag = localization.country.iso_code
+        for currency_code in popular_currencies
+          if currency_code == active_currency
+            assign active_flag = currency_countries[forloop.index0]
+            break
+          endif
+        endfor
+      -%}
+      {% form 'localization', class: 'site-header__currency-form' %}
+        <div class="site-header__currency" data-currency>
+          <button
+            class="site-header__currency-toggle"
+            type="button"
+            data-currency-toggle
+            aria-expanded="false"
+            aria-haspopup="listbox"
+            aria-label="Currency, {{ active_currency }}"
+          >
+            {% render 'currency-flag', code: active_flag %}
+            <span class="site-header__currency-label">{{ active_currency }}</span>
+            <svg class="site-header__chevron" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 4.5 6 8l3.5-3.5"/>
+            </svg>
+          </button>
+
+          <ul class="site-header__currency-menu" data-currency-menu role="listbox" hidden>
+            {%- for currency_code in popular_currencies -%}
+              {%- assign country_code = currency_countries[forloop.index0] -%}
+              <li>
+                <button
+                  class="site-header__currency-option"
+                  type="submit"
+                  name="country_code"
+                  value="{{ country_code }}"
+                  role="option"
+                  {% if active_currency == currency_code %}
+                    aria-selected="true"
+                  {% else %}
+                    aria-selected="false"
+                  {% endif %}
+                >
+                  {% render 'currency-flag', code: country_code %}
+                  <span>{{ currency_code }}</span>
+                </button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {% endform %}
+
+      <a
+        class="site-header__icon-button"
+        href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+        aria-label="Account"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="8" r="3.25"/>
+          <path stroke-linecap="round" d="M5.5 19.25c1.4-2.6 3.7-3.85 6.5-3.85s5.1 1.25 6.5 3.85"/>
+        </svg>
+      </a>
+
+      <a class="site-header__icon-button" href="{{ routes.cart_url }}" aria-label="Cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.5 8.5h11l-.8 10.2a1.5 1.5 0 0 1-1.5 1.3H8.8a1.5 1.5 0 0 1-1.5-1.3L6.5 8.5Z"/>
+          <path stroke-linecap="round" d="M9 8.5V7.2A3 3 0 0 1 12 4.2v0a3 3 0 0 1 3 3v1.3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-currency]');
+    if (!root) return;
+
+    var toggle = root.querySelector('[data-currency-toggle]');
+    var menu = root.querySelector('[data-currency-menu]');
+    if (!toggle || !menu) return;
+
+    function setOpen(open) {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(menu.hidden);
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!root.contains(event.target)) setOpen(false);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') setOpen(false);
+    });
+  })();
+
+  (function () {
+    var header = document.querySelector('[data-site-header]');
+    var toggle = header && header.querySelector('[data-menu-toggle]');
+    var menu = header && header.querySelector('[data-site-menu]');
+    if (!toggle || !menu) return;
+
+    var desktopQuery = window.matchMedia('(min-width: 750px)');
+    var isOpen = false;
+
+    function setOpen(open, returnFocus) {
+      if (open === isOpen) return;
+      isOpen = open;
+
+      header.classList.toggle('site-header--menu-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+      menu.inert = !open;
+      document.documentElement.classList.toggle('site-menu-locked', open);
+
+      if (open) {
+        var firstLink = menu.querySelector('a');
+        if (firstLink) firstLink.focus({ preventScroll: true });
+      } else if (returnFocus) {
+        toggle.focus({ preventScroll: true });
+      }
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!isOpen, true);
+    });
+
+    menu.addEventListener('click', function (event) {
+      if (event.target.closest('a')) setOpen(false, false);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (!isOpen) return;
+
+      if (event.key === 'Escape') {
+        setOpen(false, true);
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      var focusable = Array.prototype.filter.call(
+        header.querySelectorAll('a[href], button:not([disabled])'),
+        function (element) {
+          return element.offsetParent !== null || element === toggle;
+        }
+      );
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    function onBreakpoint() {
+      if (desktopQuery.matches) setOpen(false, false);
+    }
+
+    if (typeof desktopQuery.addEventListener === 'function') {
+      desktopQuery.addEventListener('change', onBreakpoint);
+    } else if (typeof desktopQuery.addListener === 'function') {
+      desktopQuery.addListener(onBreakpoint);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Left navigation"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop label",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop link"
+    },
+    {
+      "type": "text",
+      "id": "about_label",
+      "label": "About label",
+      "default": "About"
+    },
+    {
+      "type": "url",
+      "id": "about_link",
+      "label": "About link"
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact label",
+      "default": "Contact"
+    },
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact link"
+    }
+  ]
+}
+{% endschema %}

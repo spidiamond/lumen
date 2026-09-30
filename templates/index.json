@@ -1,0 +1,53 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "main-home-hero",
+      "settings": {
+        "video_url": "https://res.cloudinary.com/lwy2tuzm/video/upload/v1790683536/7648784-uhd_3840_2160_30fps_palgot.mp4",
+        "fallback_color": "#d7c4ae",
+        "eyebrow": "Where skincare begins"
+      }
+    },
+    "best_sellers": {
+      "type": "best-sellers",
+      "settings": {
+        "heading": "Best sellers",
+        "subheading": "Everyday essentials, beautifully simple.",
+        "products": [
+          "lumen-gentle-cleansing-gel",
+          "lumen-hydrating-serum",
+          "lumen-vitamin-c-brightening-serum",
+          "lumen-daily-defense-spf-50"
+        ],
+        "view_all_link": "shopify://collections/all",
+        "show_view_all": true,
+        "view_all_label": "View all",
+        "show_explore_link": true,
+        "explore_label": "Explore all products"
+      }
+    },
+    "skin_comparison": {
+      "type": "skin-comparison",
+      "settings": {
+        "heading": "See the difference.",
+        "text": "A closer look at skin that feels refreshed, smooth, and naturally radiant.",
+        "before_label": "Before",
+        "after_label": "After"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "best_sellers",
+    "skin_comparison"
+  ]
+}

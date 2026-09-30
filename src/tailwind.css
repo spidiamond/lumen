@@ -1,0 +1,17 @@
+/*
+  Tailwind source for this theme. Compiled to assets/utilities.css.
+
+  Preflight is not included, so assets/critical.css stays in control of the base reset.
+  Utilities are marked important so they still win against that unlayered stylesheet.
+*/
+
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css" important;
+
+@source not "../assets";
+@source "../layout";
+@source "../sections";
+@source "../snippets";
+@source "../blocks";
+@source "../templates";
+@source "../src";

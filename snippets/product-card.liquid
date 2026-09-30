@@ -1,0 +1,114 @@
+{% doc %}
+  Product card with a layered hover image and an integrated add-to-cart control.
+  The second product image is the hover image; without one, the first image is reused.
+
+  @param {product} product - The product to render
+  @param {string} [sizes] - Value for the image `sizes` attribute
+  @param {string} [loading] - Image loading strategy, defaults to lazy
+{% enddoc %}
+
+{%- liquid
+  assign primary_image = product.featured_image | default: product.images[0]
+  assign secondary_image = product.images[1] | default: primary_image
+  assign variant = product.selected_or_first_available_variant
+  assign image_sizes = sizes | default: '(min-width: 1100px) 25vw, 50vw'
+  assign image_loading = loading | default: 'lazy'
+  assign primary_alt = primary_image.alt | default: product.title | escape
+  assign has_hover_image = false
+  if product.images.size > 1
+    assign has_hover_image = true
+  endif
+
+  assign badge = ''
+  if product.available == false
+    assign badge = 'Sold out'
+  elsif product.tags contains 'best-seller' or product.tags contains 'Best Seller'
+    assign badge = 'Best seller'
+  elsif product.tags contains 'new' or product.tags contains 'New'
+    assign badge = 'New'
+  endif
+-%}
+
+<article class="product-card{% if has_hover_image %} product-card--has-hover{% endif %}" data-product-card>
+  <div class="product-card__media">
+    <a class="product-card__image-link" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if primary_image -%}
+        {{
+          primary_image
+          | image_url: width: 1000
+          | image_tag:
+            class: 'product-card__image product-card__image--primary',
+            widths: '320, 480, 640, 800, 1000',
+            sizes: image_sizes,
+            loading: image_loading,
+            alt: primary_alt
+        }}
+        {%- if has_hover_image -%}
+          {{
+            secondary_image
+            | image_url: width: 1000
+            | image_tag:
+              class: 'product-card__image product-card__image--secondary',
+              widths: '320, 480, 640, 800, 1000',
+              sizes: image_sizes,
+              loading: 'lazy',
+              alt: ''
+          }}
+        {%- endif -%}
+      {%- else -%}
+        <span class="product-card__placeholder">{{ 'product-1' | placeholder_svg_tag }}</span>
+      {%- endif -%}
+    </a>
+
+    {%- if badge != '' -%}
+      <span class="product-card__badge">{{ badge }}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__info">
+    <h3 class="product-card__title">
+      <a class="product-card__link" href="{{ product.url }}">
+        <span class="product-card__title-text">{{ product.title }}</span>
+      </a>
+    </h3>
+
+    <p class="product-card__price">
+      {%- if product.compare_at_price > product.price -%}
+        <span class="visually-hidden">Sale price</span>
+        <span class="product-card__price-current product-card__price-current--sale">{{ product.price | money }}</span>
+        <span class="visually-hidden">Regular price</span>
+        <s class="product-card__price-compare">{{ product.compare_at_price | money }}</s>
+      {%- else -%}
+        <span class="product-card__price-current">
+          {%- if product.price_varies -%}From {% endif -%}
+          {{ product.price | money }}
+        </span>
+      {%- endif -%}
+    </p>
+  </div>
+
+  {% form 'product', product, class: 'product-card__form', data-product-card-form: '' %}
+    <input type="hidden" name="id" value="{{ variant.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button
+      class="product-card__cta"
+      type="submit"
+      aria-label="Add {{ product.title | escape }} to cart"
+      data-product-card-button
+      {% unless variant.available %}
+        disabled
+      {% endunless %}
+    >
+      <span class="product-card__cta-label" data-label-default>
+        {%- if variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+      </span>
+      <span class="product-card__cta-label product-card__cta-label--added" data-label-added aria-hidden="true">
+        Added
+        <svg viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 6.4 5 8.8l4.5-5.3"/>
+        </svg>
+      </span>
+    </button>
+    <span class="visually-hidden" role="status" aria-live="polite" data-product-card-status></span>
+  {% endform %}
+</article>

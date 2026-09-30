@@ -1,0 +1,12 @@
+{
+  "name": "lumen",
+  "private": true,
+  "scripts": {
+    "dev": "tailwindcss -i ./src/tailwind.css -o ./assets/utilities.css --watch",
+    "build": "tailwindcss -i ./src/tailwind.css -o ./assets/utilities.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4",
+    "tailwindcss": "^4"
+  }
+}

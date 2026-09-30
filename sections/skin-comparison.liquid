@@ -1,0 +1,183 @@
+{{ 'skin-comparison.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'skin-comparison.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign heading_id = 'SkinComparisonHeading-' | append: section.id
+  assign before_alt = section.settings.before_image.alt | default: section.settings.before_alt | escape
+  assign after_alt = section.settings.after_image.alt | default: section.settings.after_alt | escape
+  assign image_sizes = '(min-width: 1440px) 1320px, (min-width: 750px) 92vw, 100vw'
+-%}
+
+<section class="skin-compare full-width" aria-labelledby="{{ heading_id }}">
+  <div class="skin-compare__inner">
+    <header class="skin-compare__header">
+      <h2 class="skin-compare__heading" id="{{ heading_id }}">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p class="skin-compare__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- comment -%}
+      Both images share one frame, one crop and one object-position, so the
+      faces stay registered. The after layer is clipped from the divider to
+      the right edge; each label lives in its own layer and is revealed with it.
+    {%- endcomment -%}
+    <div class="skin-compare__frame" data-skin-compare style="--compare-position: 50%;">
+      <div class="skin-compare__layer skin-compare__layer--before">
+        {%- if section.settings.before_image != blank -%}
+          {{
+            section.settings.before_image
+            | image_url: width: 2048
+            | image_tag:
+              class: 'skin-compare__image',
+              widths: '640, 960, 1280, 1600, 2048',
+              sizes: image_sizes,
+              loading: 'lazy',
+              draggable: 'false',
+              alt: before_alt
+          }}
+        {%- else -%}
+          <img
+            class="skin-compare__image"
+            src="{{ 'before_skin.png' | asset_url }}"
+            alt="{{ before_alt }}"
+            width="1678"
+            height="937"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+          >
+        {%- endif -%}
+        <span class="skin-compare__label skin-compare__label--before" aria-hidden="true">
+          {{- section.settings.before_label | escape -}}
+        </span>
+      </div>
+
+      <div class="skin-compare__layer skin-compare__layer--after">
+        {%- if section.settings.after_image != blank -%}
+          {{
+            section.settings.after_image
+            | image_url: width: 2048
+            | image_tag:
+              class: 'skin-compare__image',
+              widths: '640, 960, 1280, 1600, 2048',
+              sizes: image_sizes,
+              loading: 'lazy',
+              draggable: 'false',
+              alt: after_alt
+          }}
+        {%- else -%}
+          <img
+            class="skin-compare__image"
+            src="{{ 'after_skin.png' | asset_url }}"
+            alt="{{ after_alt }}"
+            width="1678"
+            height="937"
+            loading="lazy"
+            decoding="async"
+            draggable="false"
+          >
+        {%- endif -%}
+        <span class="skin-compare__label skin-compare__label--after" aria-hidden="true">
+          {{- section.settings.after_label | escape -}}
+        </span>
+      </div>
+
+      <div
+        class="skin-compare__handle"
+        data-skin-compare-handle
+        role="slider"
+        tabindex="0"
+        aria-label="Before and after comparison"
+        aria-orientation="horizontal"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="50"
+        aria-valuetext="50% {{ section.settings.before_label | escape }}, 50% {{ section.settings.after_label | escape }}"
+        data-before-label="{{ section.settings.before_label | escape }}"
+        data-after-label="{{ section.settings.after_label | escape }}"
+      >
+        <span class="skin-compare__line" aria-hidden="true"></span>
+        <span class="skin-compare__knob" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 7.5 5 12l4.5 4.5"/>
+            <path d="M14.5 7.5 19 12l-4.5 4.5"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Before / after",
+  "tag": "div",
+  "class": "section-skin-comparison",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See the difference."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Supporting text",
+      "default": "A closer look at skin that feels refreshed, smooth, and naturally radiant."
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use two images with the same dimensions and framing so the faces line up. Leave empty to use the theme's before_skin.png and after_skin.png."
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before image"
+    },
+    {
+      "type": "text",
+      "id": "before_alt",
+      "label": "Before image alt text",
+      "default": "Portrait of a woman before, with visible blemishes and uneven skin texture"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After image"
+    },
+    {
+      "type": "text",
+      "id": "after_alt",
+      "label": "After image alt text",
+      "default": "The same portrait after, with skin that looks smoother, clearer and more even"
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before / after"
+    }
+  ]
+}
+{% endschema %}

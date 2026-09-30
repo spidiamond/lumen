@@ -1,0 +1,240 @@
+/*
+  Before / after skin comparison.
+  --compare-position (0–100%) is the divider position, set on the frame by
+  skin-comparison.js. Everything that moves reads from that one variable.
+*/
+
+.shopify-section:has(> .skin-compare) {
+  display: block;
+}
+
+.skin-compare {
+  --sc-ink: var(--header-ink, #161616);
+  --sc-muted: #6d645b;
+  --sc-gutter: clamp(20px, 3.4vw, 56px);
+  --sc-ratio: 1678 / 937;
+  --sc-focus: 55% 50%;
+  --sc-knob-size: 46px;
+  --sc-hit-width: 56px;
+  --sc-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  background: var(--page-cream, #f3efe8);
+  color: var(--sc-ink);
+}
+
+.skin-compare__inner {
+  max-width: 1600px;
+  margin-inline: auto;
+  padding: clamp(32px, 4vw, 64px) var(--sc-gutter) clamp(96px, 10vw, 160px);
+}
+
+.skin-compare__header {
+  max-width: 640px;
+  margin: 0 auto clamp(36px, 4.2vw, 64px);
+  text-align: center;
+}
+
+.skin-compare__heading {
+  margin: 0 0 18px;
+  font-family: var(--font-primary--family);
+  font-size: clamp(28px, 3.3vw, 48px);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sc-ink);
+}
+
+.skin-compare__text {
+  max-width: 34ch;
+  margin: 0 auto;
+  font-family: var(--font-primary--family);
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--sc-muted);
+}
+
+/*
+  Width is capped three ways: the content column, 1320px, and whatever
+  width keeps the whole image visible under the navbar on short screens.
+*/
+.skin-compare__frame {
+  position: relative;
+  width: min(100%, 1320px, max(320px, calc((100svh - var(--header-height, 76px) - 72px) * 1678 / 937)));
+  aspect-ratio: var(--sc-ratio);
+  margin-inline: auto;
+  background: #d8cdc0;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.skin-compare__layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.skin-compare__layer--after {
+  clip-path: inset(0 0 0 var(--compare-position, 50%));
+}
+
+.skin-compare__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: var(--sc-focus);
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.skin-compare__label {
+  position: absolute;
+  top: clamp(14px, 1.7vw, 26px);
+  font-family: var(--nav-font);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.94);
+  text-shadow: 0 1px 10px rgb(22 22 22 / 0.22);
+  pointer-events: none;
+}
+
+.skin-compare__label--before {
+  left: clamp(16px, 1.9vw, 30px);
+}
+
+.skin-compare__label--after {
+  right: clamp(16px, 1.9vw, 30px);
+  margin-right: -0.3em;
+}
+
+/* The visible handle is small; the handle element itself is a wide touch target. */
+.skin-compare__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--compare-position, 50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--sc-hit-width);
+  margin-left: calc(var(--sc-hit-width) / -2);
+  color: var(--sc-ink);
+  cursor: ew-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.skin-compare__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  margin-left: -0.5px;
+  background: rgb(255 255 255 / 0.88);
+  box-shadow: 0 0 10px rgb(22 22 22 / 0.14);
+}
+
+.skin-compare__knob {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--sc-knob-size);
+  height: var(--sc-knob-size);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 50%;
+  background: rgb(251 249 245 / 0.9);
+  box-shadow:
+    0 6px 18px rgb(22 22 22 / 0.12),
+    0 1px 2px rgb(22 22 22 / 0.08);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition:
+    transform 240ms var(--sc-ease),
+    background-color 240ms var(--sc-ease),
+    box-shadow 240ms var(--sc-ease);
+}
+
+.skin-compare__knob svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .skin-compare__frame:hover .skin-compare__knob {
+    background: rgb(251 249 245 / 1);
+    box-shadow:
+      0 8px 24px rgb(22 22 22 / 0.16),
+      0 1px 2px rgb(22 22 22 / 0.08);
+  }
+}
+
+.skin-compare__frame.is-dragging .skin-compare__knob {
+  transform: scale(1.06);
+  background: rgb(251 249 245 / 1);
+  box-shadow:
+    0 10px 28px rgb(22 22 22 / 0.2),
+    0 1px 2px rgb(22 22 22 / 0.08);
+}
+
+.skin-compare__handle:focus-visible .skin-compare__knob {
+  outline: 2px solid var(--sc-ink);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1099px) {
+  .skin-compare__frame {
+    width: 100%;
+  }
+}
+
+/* Phones get a taller 4:3 crop so the face stays readable; both layers share it. */
+@media (max-width: 749px) {
+  .skin-compare {
+    --sc-ratio: 4 / 3;
+    --sc-knob-size: 42px;
+  }
+
+  .skin-compare__inner {
+    padding-top: 24px;
+    padding-bottom: 88px;
+  }
+
+  .skin-compare__header {
+    margin-bottom: 28px;
+  }
+
+  .skin-compare__heading {
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .skin-compare__label {
+    font-size: 10px;
+    letter-spacing: 0.26em;
+  }
+
+  .skin-compare__label--after {
+    margin-right: -0.26em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skin-compare__knob {
+    transition: none;
+  }
+
+  .skin-compare__frame.is-dragging .skin-compare__knob {
+    transform: none;
+  }
+}

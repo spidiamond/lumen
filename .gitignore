@@ -1,0 +1,29 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+node_modules/
+
+# Shopify CLI files
+.shopify/
+
+## Release files
+release
+*.zip
+
+# Local design references (not part of the theme)
+inspiration/
+
+# Logs, env and editor files
+*.log
+npm-debug.log*
+.env
+.env.*
+.vscode/
+.idea/
+.cursor/

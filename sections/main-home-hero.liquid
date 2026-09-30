@@ -1,0 +1,65 @@
+<section
+  class="home-hero full-width"
+  data-home-hero
+  style="--hero-fallback: {{ section.settings.fallback_color }};"
+>
+  <div class="home-hero__media" aria-hidden="true">
+    {%- if section.settings.video_url != blank -%}
+      <video
+        class="home-hero__video"
+        data-hero-video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {%- endif -%}
+  </div>
+
+  <div class="home-hero__caption" data-hero-caption>
+    <p class="home-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    <span class="home-hero__arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9.5 12 15.5 18 9.5"/>
+      </svg>
+    </span>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Homepage hero",
+  "tag": "section",
+  "class": "section-home-hero",
+  "settings": [
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Hero video URL"
+    },
+    {
+      "type": "color",
+      "id": "fallback_color",
+      "label": "Fallback background",
+      "default": "#d7c4ae"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Bottom text",
+      "default": "Where skincare begins"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "presets": [
+    {
+      "name": "Homepage hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,52 @@
+{%- comment -%}
+  Small flag for the currency menu. `code` is a country ISO code.
+{%- endcomment -%}
+<svg class="site-header__flag" viewBox="0 0 20 14" aria-hidden="true">
+  {%- case code -%}
+    {%- when 'US' -%}
+      <rect width="20" height="14" fill="#fff"/>
+      <rect y="0" width="20" height="1.08" fill="#b22234"/>
+      <rect y="2.15" width="20" height="1.08" fill="#b22234"/>
+      <rect y="4.31" width="20" height="1.08" fill="#b22234"/>
+      <rect y="6.46" width="20" height="1.08" fill="#b22234"/>
+      <rect y="8.62" width="20" height="1.08" fill="#b22234"/>
+      <rect y="10.77" width="20" height="1.08" fill="#b22234"/>
+      <rect y="12.92" width="20" height="1.08" fill="#b22234"/>
+      <rect width="8.2" height="7.54" fill="#3c3b6e"/>
+    {%- when 'DE' -%}
+      <rect width="20" height="4.67" fill="#000"/>
+      <rect y="4.67" width="20" height="4.67" fill="#dd0000"/>
+      <rect y="9.33" width="20" height="4.67" fill="#ffce00"/>
+    {%- when 'GB' -%}
+      <rect width="20" height="14" fill="#012169"/>
+      <path d="M0 0 L20 14 M20 0 L0 14" stroke="#fff" stroke-width="2.6"/>
+      <path d="M0 0 L20 14 M20 0 L0 14" stroke="#c8102e" stroke-width="1.2"/>
+      <path d="M10 0 V14 M0 7 H20" stroke="#fff" stroke-width="4"/>
+      <path d="M10 0 V14 M0 7 H20" stroke="#c8102e" stroke-width="2.2"/>
+    {%- when 'AU' -%}
+      <rect width="20" height="14" fill="#012169"/>
+      <rect width="10" height="7" fill="#012169"/>
+      <path d="M0 0 L10 7 M10 0 L0 7" stroke="#fff" stroke-width="1.4"/>
+      <path d="M5 0 V7 M0 3.5 H10" stroke="#fff" stroke-width="2.2"/>
+      <path d="M5 0 V7 M0 3.5 H10" stroke="#c8102e" stroke-width="1.1"/>
+      <circle cx="15" cy="9.2" r="0.7" fill="#fff"/>
+      <circle cx="16.6" cy="6.4" r="0.55" fill="#fff"/>
+      <circle cx="13.4" cy="5.6" r="0.45" fill="#fff"/>
+      <circle cx="14.6" cy="11.2" r="0.45" fill="#fff"/>
+    {%- when 'CA' -%}
+      <rect width="20" height="14" fill="#fff"/>
+      <rect width="5" height="14" fill="#ff0000"/>
+      <rect x="15" width="5" height="14" fill="#ff0000"/>
+      <path d="M10 3.2 L10.8 5.4 L13.1 5.2 L11.3 6.7 L12.1 8.9 L10 7.6 L7.9 8.9 L8.7 6.7 L6.9 5.2 L9.2 5.4 Z" fill="#ff0000"/>
+    {%- when 'JP' -%}
+      <rect width="20" height="14" fill="#fff"/>
+      <circle cx="10" cy="7" r="3.3" fill="#bc002d"/>
+    {%- when 'IN' -%}
+      <rect width="20" height="4.67" fill="#ff9933"/>
+      <rect y="4.67" width="20" height="4.67" fill="#fff"/>
+      <rect y="9.33" width="20" height="4.67" fill="#138808"/>
+      <circle cx="10" cy="7" r="1.35" fill="none" stroke="#000080" stroke-width="0.45"/>
+    {%- else -%}
+      <rect width="20" height="14" fill="#e6e0d8"/>
+  {%- endcase -%}
+</svg>

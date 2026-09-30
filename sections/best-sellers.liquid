@@ -1,0 +1,115 @@
+{{ 'best-sellers.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-card.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign view_all_url = section.settings.view_all_link | default: routes.all_products_collection_url
+  assign product_count = section.settings.products.count
+-%}
+
+<section class="best-sellers full-width" aria-labelledby="BestSellersHeading-{{ section.id }}">
+  <div class="best-sellers__inner">
+    <header class="best-sellers__header">
+      <div class="best-sellers__heading-group">
+        <h2 class="best-sellers__heading" id="BestSellersHeading-{{ section.id }}">
+          {{ section.settings.heading }}
+        </h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="best-sellers__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_view_all -%}
+        <a class="best-sellers__nav-link" href="{{ view_all_url }}">
+          <span class="best-sellers__nav-text">{{ section.settings.view_all_label }}</span>
+          <span class="best-sellers__nav-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
+    </header>
+
+    {%- if product_count > 0 -%}
+      <ul class="best-sellers__grid" role="list">
+        {%- for product in section.settings.products limit: 4 -%}
+          <li class="best-sellers__item">
+            {% render 'product-card',
+              product: product,
+              sizes: '(min-width: 1100px) calc((100vw - 160px) / 4), (min-width: 750px) calc((100vw - 96px) / 2), calc((100vw - 44px) / 2)'
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="best-sellers__empty">Choose up to four products for this section in the theme editor.</p>
+    {%- endif -%}
+
+    {%- if section.settings.show_explore_link -%}
+      <div class="best-sellers__footer">
+        <a class="best-sellers__nav-link" href="{{ view_all_url }}">
+          <span class="best-sellers__nav-text">{{ section.settings.explore_label }}</span>
+          <span class="best-sellers__nav-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Best sellers",
+  "tag": "div",
+  "class": "section-best-sellers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best sellers"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Supporting text",
+      "default": "Everyday essentials, beautifully simple."
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 4
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View all link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "View all"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_explore_link",
+      "label": "Show explore link below products",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "explore_label",
+      "label": "Explore link label",
+      "default": "Explore all products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Best sellers"
+    }
+  ]
+}
+{% endschema %}
