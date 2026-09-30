@@ -11,7 +11,15 @@
   "sections": {
     "main": {
       "type": "collection",
-      "settings": {}
+      "settings": {
+        "banner": "shopify://shop_images/landscape_banner.jpg",
+        "heading_lead": "Discover",
+        "heading_accent": "Skincare Essentials",
+        "overlay": 26,
+        "banner_position": "center 42%",
+        "show_label": false,
+        "label": "All essentials"
+      }
     }
   },
   "order": [
