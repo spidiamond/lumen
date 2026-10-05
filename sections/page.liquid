@@ -1,6 +1,6 @@
 {% comment %}
-  Contact uses the page title and body. Shop and About are real pages in
-  admin, so their designed layouts render here on the normal page URL.
+  Contact uses the page title and body. Shop is a real page in admin, so its
+  designed layout renders here. About uses the page.about template.
 {% endcomment %}
 
 {%- if page.handle == 'shop' -%}
@@ -14,8 +14,6 @@
     label: 'All essentials',
     section_id: 'page-shop'
   %}
-{%- elsif page.handle == 'about' -%}
-  {% render 'about-page' %}
 {%- else -%}
   <h1>{{ page.title }}</h1>
   {{ page.content }}
