@@ -1,0 +1,78 @@
+{% render 'about-assets' %}
+
+{%- liquid
+  assign lines = section.settings.lines | newline_to_br | replace: '<br />', '|' | replace: '<br>', '|' | split: '|'
+  assign image_position = section.settings.image_position | default: 'center'
+-%}
+
+<section class="about-manifesto full-width" data-space="{{ section.settings.space }}">
+  <div class="about-manifesto__layout">
+    <h2 class="about-manifesto__heading" data-about-lines>
+      {%- for line in lines -%}
+        {%- assign clean = line | strip -%}
+        {%- if clean != blank -%}
+          <span class="about-line" data-about-line>{{ clean | escape }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </h2>
+    <figure class="about-frame about-manifesto__figure">
+      <div class="about-shift" data-about-parallax="drift">
+        {% render 'about-media',
+          image: section.settings.image,
+          widths: '500, 800, 1100, 1400',
+          sizes: '(min-width: 900px) 34vw, 92vw',
+          position: image_position
+        %}
+      </div>
+    </figure>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About manifesto",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "lines",
+      "label": "Lines",
+      "info": "One line per row.",
+      "default": "We believe skincare\nshould feel less like\na routine,\nand more like a ritual."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Leave empty to show the placeholder."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "space",
+      "label": "Spacing",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "About manifesto" }
+  ]
+}
+{% endschema %}

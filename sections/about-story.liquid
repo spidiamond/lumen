@@ -1,0 +1,137 @@
+{% render 'about-assets' %}
+
+<section class="about-story full-width" data-about-story data-space="{{ section.settings.space }}">
+  <div class="about-story__layout">
+    <div class="about-story__stage" data-story-stage data-about-parallax="story">
+      {%- for block in section.blocks -%}
+        <div
+          class="about-frame about-story__frame"
+          data-story-frame
+          data-story-index="{{ forloop.index0 }}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="about-shift">
+            {% render 'about-media',
+              image: block.settings.image,
+              widths: '700, 1000, 1400, 1800',
+              sizes: '(min-width: 900px) 48vw, 92vw'
+            %}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="about-story__chapters">
+      <header class="about-story__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="about-kicker">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="about-story__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </header>
+
+      {%- for block in section.blocks -%}
+        {%- assign index = forloop.index | prepend: '0' | slice: -2, 2 -%}
+        <article class="about-story__chapter" data-story-chapter data-story-index="{{ forloop.index0 }}">
+          <h3 class="about-story__title">
+            <span class="about-story__kicker">{{ index }}</span>
+            {{ block.settings.title | escape }}
+          </h3>
+          {%- if block.settings.text != blank -%}
+            <p class="about-story__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About story",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The practice"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Care, considered slowly."
+    },
+    {
+      "type": "select",
+      "id": "space",
+      "label": "Spacing",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Leave empty to show the placeholder."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Formulated with intention"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Each formula starts with a reason to exist. Nothing is added for show."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "About story",
+      "blocks": [
+        {
+          "type": "story",
+          "settings": {
+            "title": "Formulated with intention",
+            "text": "Each formula starts with a reason to exist. Nothing is added for show."
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Designed for daily rituals",
+            "text": "Textures and steps are considered for the way care actually fits into a day."
+          }
+        },
+        {
+          "type": "story",
+          "settings": {
+            "title": "Made to feel as good as it performs",
+            "text": "Care should be effective, and it should feel calm in the hand."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

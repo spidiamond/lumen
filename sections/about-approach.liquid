@@ -1,0 +1,100 @@
+{% render 'about-assets' %}
+
+{%- liquid
+  assign heading_lines = section.settings.heading | newline_to_br | replace: '<br />', '|' | replace: '<br>', '|' | split: '|'
+  assign image_position = section.settings.image_position | default: 'center'
+-%}
+
+<section class="about-approach full-width" data-space="{{ section.settings.space }}">
+  <div class="about-approach__layout">
+    <div class="about-approach__intro" data-about-watch data-about-enter="copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="about-kicker">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="about-approach__heading">
+        {%- for line in heading_lines -%}
+          {%- assign clean = line | strip -%}
+          {%- if clean != blank -%}
+            <span class="about-approach__line">{{ clean | escape }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </h2>
+    </div>
+
+    <div class="about-approach__copy" data-about-watch data-about-enter="copy">
+      <div class="about-approach__body rte">{{ section.settings.body }}</div>
+    </div>
+
+    <div class="about-approach__media" data-about-watch data-about-enter="media">
+      <div class="about-frame about-approach__figure">
+        {% render 'about-media',
+          image: section.settings.image,
+          widths: '600, 900, 1400, 1800',
+          sizes: '(min-width: 900px) 46vw, 92vw',
+          position: image_position
+        %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About approach",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Lūmen approach"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "One line per row.",
+      "default": "Less noise.\nMore intention."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Story",
+      "default": "<p>Lūmen was created around a simple idea: skincare should be effective without becoming complicated.</p><p>We focus on thoughtful formulas, considered textures, and everyday rituals designed to bring out the natural character of your skin.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Leave empty to show the placeholder."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "space",
+      "label": "Spacing",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "About approach" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,97 @@
+{% render 'about-assets' %}
+
+{%- liquid
+  assign cta_url = section.settings.cta_link | default: routes.all_products_collection_url
+  assign secondary_url = section.settings.secondary_link | default: routes.all_products_collection_url
+-%}
+
+<section class="about-cta full-width" data-space="{{ section.settings.space }}">
+  <div class="about-cta__inner" data-about-watch>
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="about-kicker">{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="about-cta__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.copy != blank -%}
+      <p class="about-cta__copy">{{ section.settings.copy | escape }}</p>
+    {%- endif -%}
+    <div class="about-cta__actions">
+      {%- if section.settings.cta_label != blank -%}
+        <a class="about-cta__button" href="{{ cta_url }}">
+          {{ section.settings.cta_label | escape }}
+          <span class="about-cta__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.secondary_label != blank -%}
+        <a class="about-cta__link" href="{{ secondary_url }}">{{ section.settings.secondary_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About close",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Lūmen"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Meet your everyday ritual."
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Supporting text",
+      "default": "Explore the essentials designed to make skincare feel simple."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Shop skincare"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Leave empty to open the shop."
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary link label",
+      "info": "Leave empty to hide the second link."
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary link"
+    },
+    {
+      "type": "select",
+      "id": "space",
+      "label": "Spacing",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "About close" }
+  ]
+}
+{% endschema %}

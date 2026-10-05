@@ -1,0 +1,88 @@
+{% render 'about-assets' %}
+
+<section class="about-principles full-width" data-about-principles data-space="{{ section.settings.space }}">
+  <div class="about-principles__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="about-principles__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="about-principles__rail" data-principle-list>
+        <div class="about-principles__track" aria-hidden="true">
+          <span class="about-principles__progress"></span>
+        </div>
+        <ol class="about-principles__list">
+          {%- for block in section.blocks -%}
+            {%- assign index = forloop.index | prepend: '0' | slice: -2, 2 -%}
+            <li class="about-principle" data-principle {{ block.shopify_attributes }}>
+              <span class="about-principle__index">{{ index }}</span>
+              <h3 class="about-principle__title">{{ block.settings.title | escape }}</h3>
+              {%- if block.settings.text != blank -%}
+                <p class="about-principle__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About principles",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Lūmen philosophy"
+    },
+    {
+      "type": "select",
+      "id": "space",
+      "label": "Spacing",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "principle",
+      "name": "Principle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Considered"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Every formula has a reason to exist."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    {
+      "name": "About principles",
+      "blocks": [
+        { "type": "principle", "settings": { "title": "Considered", "text": "Every formula has a reason to exist." } },
+        { "type": "principle", "settings": { "title": "Balanced", "text": "Effective care without unnecessary complexity." } },
+        { "type": "principle", "settings": { "title": "Luminous", "text": "Healthy-looking skin begins with consistency." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

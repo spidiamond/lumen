@@ -1,0 +1,69 @@
+{% render 'about-assets' %}
+
+{%- liquid
+  assign lines = section.settings.lines | newline_to_br | replace: '<br />', '|' | replace: '<br>', '|' | split: '|'
+-%}
+
+<section class="about-statement full-width" data-space="{{ section.settings.space }}">
+  <div class="about-statement__inner" data-align="{{ section.settings.alignment }}">
+    <h2 class="about-statement__heading" data-about-lines>
+      {%- for line in lines -%}
+        {%- assign clean = line | strip -%}
+        {%- if clean != blank -%}
+          <span class="about-line" data-about-line>{{ clean | escape }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if section.settings.emphasis != blank -%}
+        <span class="about-line about-statement__emphasis" data-about-line>{{ section.settings.emphasis | escape }}</span>
+      {%- endif -%}
+    </h2>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About statement",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "lines",
+      "label": "Lines",
+      "info": "One line per row. The emphasized line sits below these.",
+      "default": "Your skin doesn't need\nmore noise."
+    },
+    {
+      "type": "text",
+      "id": "emphasis",
+      "label": "Emphasized line",
+      "default": "It needs attention."
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "space",
+      "label": "Spacing",
+      "default": "default",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "About statement" }
+  ]
+}
+{% endschema %}

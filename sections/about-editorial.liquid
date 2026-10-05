@@ -1,0 +1,59 @@
+{% render 'about-assets' %}
+
+{%- liquid
+  assign image_position = section.settings.image_position | default: 'center'
+-%}
+
+<section class="about-editorial full-width{% if section.settings.image == blank %} is-empty{% endif %}">
+  <div class="about-frame about-editorial__frame" data-about-watch>
+    <div class="about-shift" data-about-parallax="drift">
+      {% render 'about-media',
+        image: section.settings.image,
+        widths: '750, 1200, 1800, 2400',
+        sizes: '100vw',
+        position: image_position
+      %}
+    </div>
+    {%- if section.settings.caption != blank -%}
+      <p class="about-editorial__caption">{{ section.settings.caption | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About editorial",
+  "tag": "div",
+  "class": "section-about",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Wide image. Leave empty to show the placeholder."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center 40%", "label": "Slightly above center" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Skin, in its own light."
+    }
+  ],
+  "presets": [
+    { "name": "About editorial" }
+  ]
+}
+{% endschema %}

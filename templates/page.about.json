@@ -1,0 +1,141 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "about-hero",
+      "settings": {
+        "eyebrow": "About Lūmen",
+        "heading": "Skincare,",
+        "heading_emphasis": "illuminated.",
+        "copy": "Thoughtful formulas for skin that looks, feels, and lives beautifully.",
+        "image_position": "center",
+        "alignment": "left"
+      }
+    },
+    "manifesto": {
+      "type": "about-manifesto",
+      "settings": {
+        "lines": "We believe skincare\nshould feel less like\na routine,\nand more like a ritual.",
+        "image_position": "center",
+        "space": "default"
+      }
+    },
+    "approach": {
+      "type": "about-approach",
+      "settings": {
+        "eyebrow": "The Lūmen approach",
+        "heading": "Less noise.\nMore intention.",
+        "body": "<p>Lūmen was created around a simple idea: skincare should be effective without becoming complicated.</p><p>We focus on thoughtful formulas, considered textures, and everyday rituals designed to bring out the natural character of your skin.</p>",
+        "image_position": "center",
+        "space": "default"
+      }
+    },
+    "principles": {
+      "type": "about-principles",
+      "blocks": {
+        "considered": {
+          "type": "principle",
+          "settings": {
+            "title": "Considered",
+            "text": "Every formula has a reason to exist."
+          }
+        },
+        "balanced": {
+          "type": "principle",
+          "settings": {
+            "title": "Balanced",
+            "text": "Effective care without unnecessary complexity."
+          }
+        },
+        "luminous": {
+          "type": "principle",
+          "settings": {
+            "title": "Luminous",
+            "text": "Healthy-looking skin begins with consistency."
+          }
+        }
+      },
+      "block_order": ["considered", "balanced", "luminous"],
+      "settings": {
+        "heading": "The Lūmen philosophy",
+        "space": "default"
+      }
+    },
+    "story": {
+      "type": "about-story",
+      "blocks": {
+        "intention": {
+          "type": "story",
+          "settings": {
+            "title": "Formulated with intention",
+            "text": "Each formula starts with a reason to exist. Nothing is added for show."
+          }
+        },
+        "rituals": {
+          "type": "story",
+          "settings": {
+            "title": "Designed for daily rituals",
+            "text": "Textures and steps are considered for the way care actually fits into a day."
+          }
+        },
+        "feel": {
+          "type": "story",
+          "settings": {
+            "title": "Made to feel as good as it performs",
+            "text": "Care should be effective, and it should feel calm in the hand."
+          }
+        }
+      },
+      "block_order": ["intention", "rituals", "feel"],
+      "settings": {
+        "eyebrow": "The practice",
+        "heading": "Care, considered slowly.",
+        "space": "default"
+      }
+    },
+    "editorial": {
+      "type": "about-editorial",
+      "settings": {
+        "caption": "Skin, in its own light.",
+        "image_position": "center"
+      }
+    },
+    "statement": {
+      "type": "about-statement",
+      "settings": {
+        "lines": "Your skin doesn't need\nmore noise.",
+        "emphasis": "It needs attention.",
+        "alignment": "left",
+        "space": "default"
+      }
+    },
+    "close": {
+      "type": "about-cta",
+      "settings": {
+        "eyebrow": "Lūmen",
+        "heading": "Meet your everyday ritual.",
+        "copy": "Explore the essentials designed to make skincare feel simple.",
+        "cta_label": "Shop skincare",
+        "space": "default"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "manifesto",
+    "approach",
+    "principles",
+    "story",
+    "editorial",
+    "statement",
+    "close"
+  ]
+}

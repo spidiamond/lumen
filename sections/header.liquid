@@ -25,8 +25,24 @@
   </div>
 
   {%- liquid
-    assign shop_url = section.settings.shop_link | default: routes.all_products_collection_url
-    assign about_url = section.settings.about_link | default: pages.about.url | default: '/pages/about'
+    assign shop_url = section.settings.shop_link
+    if shop_url == blank
+      if pages.shop != blank
+        assign shop_url = pages.shop.url
+      else
+        assign shop_url = routes.all_products_collection_url
+      endif
+    endif
+
+    assign about_url = section.settings.about_link
+    if about_url == blank
+      if pages.about != blank
+        assign about_url = pages.about.url
+      else
+        assign about_url = '/pages/about'
+      endif
+    endif
+
     assign contact_url = section.settings.contact_link | default: pages.contact.url | default: '/pages/contact'
   -%}
 
@@ -284,7 +300,8 @@
     {
       "type": "url",
       "id": "shop_link",
-      "label": "Shop link"
+      "label": "Shop link",
+      "info": "Leave empty to open the Shop page."
     },
     {
       "type": "text",
@@ -295,7 +312,8 @@
     {
       "type": "url",
       "id": "about_link",
-      "label": "About link"
+      "label": "About link",
+      "info": "Leave empty to open the About page."
     },
     {
       "type": "text",
@@ -306,7 +324,8 @@
     {
       "type": "url",
       "id": "contact_link",
-      "label": "Contact link"
+      "label": "Contact link",
+      "info": "Leave empty to open the Contact page."
     }
   ]
 }

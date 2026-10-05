@@ -1,13 +1,25 @@
 {% comment %}
-  This section is used in the page template to render store pages like About us
-  or Contact us.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/page
+  Contact uses the page title and body. Shop and About are real pages in
+  admin, so their designed layouts render here on the normal page URL.
 {% endcomment %}
 
-<h1>{{ page.title }}</h1>
-
-{{ page.content }}
+{%- if page.handle == 'shop' -%}
+  {{ 'shop.css' | asset_url | stylesheet_tag }}
+  {% render 'shop-main',
+    lead: 'Discover',
+    accent: 'Skincare Essentials',
+    banner_position: 'center 42%',
+    overlay: 26,
+    show_label: false,
+    label: 'All essentials',
+    section_id: 'page-shop'
+  %}
+{%- elsif page.handle == 'about' -%}
+  {% render 'about-page' %}
+{%- else -%}
+  <h1>{{ page.title }}</h1>
+  {{ page.content }}
+{%- endif -%}
 
 {% schema %}
 {
