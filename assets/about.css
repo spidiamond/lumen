@@ -735,6 +735,7 @@ html.about-js .about-line {
 
 html.about-js .about-manifesto .about-line {
   filter: blur(2px);
+  letter-spacing: -0.034em;
 }
 
 html.about-js .about-line.is-in {
@@ -747,6 +748,16 @@ html.about-js .about-line.is-in {
     transform 900ms var(--about-ease),
     filter 900ms var(--about-ease),
     letter-spacing 900ms var(--about-ease);
+}
+
+html.about-js .about-manifesto .about-line.is-in {
+  letter-spacing: -0.034em;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity 900ms var(--about-ease),
+    transform 900ms var(--about-ease),
+    filter 900ms var(--about-ease);
 }
 
 html.about-js [data-about-enter="media"] {
