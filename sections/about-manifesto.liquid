@@ -19,6 +19,8 @@
       <div class="about-shift" data-about-parallax="drift">
         {% render 'about-media',
           image: section.settings.image,
+          fallback: 'about-manifesto.jpg',
+          fallback_alt: 'A woman in warm natural light',
           widths: '500, 800, 1100, 1400',
           sizes: '(min-width: 900px) 34vw, 92vw',
           position: image_position

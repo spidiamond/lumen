@@ -1,0 +1,20 @@
+{% comment %}
+  Shared About-page assets. Each About section renders this once.
+  The script guards itself, so a second copy does not run twice.
+{% endcomment %}
+<script>
+  (function () {
+    if (window.__aboutMotion) return;
+    window.__aboutMotion = true;
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('about-js');
+    }
+    window.addEventListener('DOMContentLoaded', function () {
+      window.setTimeout(function () {
+        if (!window.LumenAbout) document.documentElement.classList.remove('about-js');
+      }, 1600);
+    });
+  })();
+</script>
+{{ 'about.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'about.js' | asset_url }}" defer></script>

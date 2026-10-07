@@ -2,7 +2,7 @@
   Image or a quiet placeholder. The parent frame sets the aspect ratio.
 
   Accepts:
-  image, widths, sizes, loading, fetchpriority, position
+  image, fallback, fallback_alt, widths, sizes, loading, fetchpriority, position
 {% endcomment %}
 {%- liquid
   assign media_loading = loading | default: 'lazy'
@@ -37,6 +37,16 @@
           alt: media_alt
       }}
     {%- endif -%}
+  {%- elsif fallback != blank -%}
+    <img
+      class="about-media__img"
+      src="{{ fallback | asset_url }}"
+      alt="{{ fallback_alt | default: '' | escape }}"
+      width="2000"
+      height="2000"
+      loading="{{ media_loading }}"
+      {% if fetchpriority == 'high' %}fetchpriority="high"{% endif %}
+    >
   {%- else -%}
     <div class="about-media__placeholder" aria-hidden="true">
       <span>Add image</span>

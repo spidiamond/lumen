@@ -4,11 +4,13 @@
   assign image_position = section.settings.image_position | default: 'center'
 -%}
 
-<section class="about-editorial full-width{% if section.settings.image == blank %} is-empty{% endif %}">
+<section class="about-editorial full-width">
   <div class="about-frame about-editorial__frame" data-about-watch>
     <div class="about-shift" data-about-parallax="drift">
       {% render 'about-media',
         image: section.settings.image,
+        fallback: 'about-editorial.jpg',
+        fallback_alt: 'Sunlight across skin',
         widths: '750, 1200, 1800, 2400',
         sizes: '100vw',
         position: image_position

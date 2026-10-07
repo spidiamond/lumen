@@ -1,0 +1,125 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "contact-hero",
+      "settings": {
+        "eyebrow": "Get in touch",
+        "heading": "Let's talk",
+        "heading_emphasis": "skincare.",
+        "copy": "Questions, thoughts, or simply looking for the right ritual? We're here.",
+        "image_position": "center"
+      }
+    },
+    "invitation": {
+      "type": "contact-invitation",
+      "settings": {
+        "heading": "Good skincare starts\nwith listening.",
+        "copy": "Tell us what's on your mind. Whether you're looking for product guidance, need help with an order, or simply want to say hello, we're listening."
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "How can we help?",
+        "copy": "Share a little about what you need. A real person will read it.",
+        "reasons": "Product question\nOrder support\nShipping & delivery\nReturns & refunds\nSkincare guidance\nWholesale / partnership\nPress / media\nOther",
+        "button_label": "Send message",
+        "success_heading": "Thank you.",
+        "success_copy": "Your message has reached us. We'll be in touch soon."
+      }
+    },
+    "details": {
+      "type": "contact-details",
+      "settings": {
+        "heading": "Reach us directly",
+        "email_label": "Email",
+        "care_label": "Customer care",
+        "social_label": "Social"
+      }
+    },
+    "faq": {
+      "type": "contact-faq",
+      "blocks": {
+        "response": {
+          "type": "question",
+          "settings": {
+            "question": "What is your typical response time?",
+            "answer": "<p>We read every message and reply as soon as we can. If a response time is listed above, that is the one to expect.</p>"
+          }
+        },
+        "track": {
+          "type": "question",
+          "settings": {
+            "question": "How can I track my order?",
+            "answer": "<p>Use the link in your shipping confirmation. If you cannot find it, send the order number and we will help you look it up.</p>"
+          }
+        },
+        "change": {
+          "type": "question",
+          "settings": {
+            "question": "Can I change or cancel an order?",
+            "answer": "<p>Write to us with the order number as soon as you can. If it has not shipped, we will do our best to update it.</p>"
+          }
+        },
+        "choose": {
+          "type": "question",
+          "settings": {
+            "question": "How do I choose the right product?",
+            "answer": "<p>Tell us about your skin and the ritual you are hoping for. We will point you toward a fitting essential.</p>"
+          }
+        },
+        "returns": {
+          "type": "question",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>Return conditions live on the policy page. Include your order number and we will help from there.</p>"
+          }
+        },
+        "shipping": {
+          "type": "question",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Available destinations are shown at checkout. If you are unsure before you order, ask us.</p>"
+          }
+        },
+        "care": {
+          "type": "question",
+          "settings": {
+            "question": "How can I contact customer care?",
+            "answer": "<p>Use the form on this page. If an email is listed above, that reaches us as well.</p>"
+          }
+        }
+      },
+      "block_order": ["response", "track", "change", "choose", "returns", "shipping", "care"],
+      "settings": {
+        "heading": "Before you reach out"
+      }
+    },
+    "image": {
+      "type": "contact-editorial",
+      "settings": {
+        "caption": "Here when you need us.",
+        "image_position": "center"
+      }
+    },
+    "close": {
+      "type": "contact-cta",
+      "settings": {
+        "heading": "Still exploring?",
+        "copy": "Discover the rituals created to make everyday skincare feel beautifully simple.",
+        "cta_label": "Shop skincare",
+        "secondary_label": "Learn about Lūmen"
+      }
+    }
+  },
+  "order": ["hero", "invitation", "form", "details", "faq", "image", "close"]
+}

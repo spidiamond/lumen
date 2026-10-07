@@ -29,6 +29,8 @@
       <div class="about-frame about-approach__figure">
         {% render 'about-media',
           image: section.settings.image,
+          fallback: 'about-approach.jpg',
+          fallback_alt: 'Cream, serum, and a ceramic dish on stone',
           widths: '600, 900, 1400, 1800',
           sizes: '(min-width: 900px) 46vw, 92vw',
           position: image_position

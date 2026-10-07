@@ -1,0 +1,61 @@
+{% render 'contact-assets' %}
+
+{%- liquid
+  assign image_position = section.settings.image_position | default: 'center'
+-%}
+
+<section class="contact-editorial full-width">
+  <div class="contact-frame contact-editorial__frame" data-contact-watch>
+    <div class="contact-shift">
+      {% render 'contact-media',
+        image: section.settings.image,
+        fallback: 'contact-editorial.jpg',
+        fallback_alt: 'A person sitting beside a sunlit window',
+        widths: '750, 1200, 1800, 2400',
+        sizes: '100vw',
+        position: image_position
+      %}
+    </div>
+    {%- if section.settings.caption != blank -%}
+      <p class="contact-editorial__caption">{{ section.settings.caption | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact image",
+  "tag": "div",
+  "class": "section-contact",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Wide image. Leave empty to show the placeholder."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center 40%", "label": "Slightly above center" },
+        { "value": "center bottom", "label": "Bottom" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Here when you need us."
+    }
+  ],
+  "presets": [
+    { "name": "Contact image" }
+  ]
+}
+{% endschema %}

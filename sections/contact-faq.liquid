@@ -1,0 +1,85 @@
+{% render 'contact-assets' %}
+
+<section class="contact-faq full-width" data-contact-faq aria-labelledby="ContactFaq-{{ section.id }}">
+  <div class="contact-faq__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="contact-faq__heading" id="ContactFaq-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="contact-faq__list">
+        {%- for block in section.blocks -%}
+          {%- assign panel_id = 'ContactFaqPanel-' | append: section.id | append: '-' | append: block.id -%}
+          <div class="contact-faq__item" data-faq-item {{ block.shopify_attributes }}>
+            <h3 class="contact-faq__question">
+              <button
+                class="contact-faq__toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="{{ panel_id }}"
+                data-faq-toggle
+              >
+                <span class="contact-faq__label">{{ block.settings.question | escape }}</span>
+                <span class="contact-faq__icon" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="contact-faq__panel" id="{{ panel_id }}">
+              <div class="contact-faq__panel-inner">
+                {%- if block.settings.answer != blank -%}
+                  <div class="contact-faq__answer rte">{{ block.settings.answer }}</div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if shop.refund_policy != blank -%}
+      <p class="contact-faq__policy">
+        <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | escape }}</a>
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "div",
+  "class": "section-contact",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Before you reach out"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your typical response time?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We read every message and reply as soon as we can.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    { "name": "FAQ" }
+  ]
+}
+{% endschema %}

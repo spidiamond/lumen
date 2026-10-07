@@ -1,0 +1,55 @@
+{% comment %}
+  Image or a quiet placeholder. The parent frame sets the aspect ratio.
+
+  Accepts:
+  image, fallback, fallback_alt, widths, sizes, loading, fetchpriority, position
+{% endcomment %}
+{%- liquid
+  assign media_loading = loading | default: 'lazy'
+  assign media_widths = widths | default: '600, 900, 1200, 1600'
+  assign media_sizes = sizes | default: '(min-width: 900px) 46vw, 92vw'
+  assign media_position = position | default: 'center'
+-%}
+<div class="contact-media" style="--contact-pos: {{ media_position }};">
+  {%- if image != blank -%}
+    {%- assign media_alt = image.alt | default: '' -%}
+    {%- if fetchpriority == 'high' -%}
+      {{
+        image
+        | image_url: width: 2000
+        | image_tag:
+          class: 'contact-media__img',
+          widths: media_widths,
+          sizes: media_sizes,
+          loading: media_loading,
+          fetchpriority: 'high',
+          alt: media_alt
+      }}
+    {%- else -%}
+      {{
+        image
+        | image_url: width: 2000
+        | image_tag:
+          class: 'contact-media__img',
+          widths: media_widths,
+          sizes: media_sizes,
+          loading: media_loading,
+          alt: media_alt
+      }}
+    {%- endif -%}
+  {%- elsif fallback != blank -%}
+    <img
+      class="contact-media__img"
+      src="{{ fallback | asset_url }}"
+      alt="{{ fallback_alt | default: '' | escape }}"
+      width="2000"
+      height="2000"
+      loading="{{ media_loading }}"
+      {% if fetchpriority == 'high' %}fetchpriority="high"{% endif %}
+    >
+  {%- else -%}
+    <div class="contact-media__placeholder" aria-hidden="true">
+      <span>Add image</span>
+    </div>
+  {%- endif -%}
+</div>

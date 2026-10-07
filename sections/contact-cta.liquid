@@ -1,0 +1,93 @@
+{% render 'contact-assets' %}
+
+{%- liquid
+  assign cta_url = section.settings.cta_link
+  if cta_url == blank
+    if pages.shop != blank
+      assign cta_url = pages.shop.url
+    else
+      assign cta_url = routes.all_products_collection_url
+    endif
+  endif
+  assign secondary_url = section.settings.secondary_link
+  if secondary_url == blank and section.settings.secondary_label != blank
+    if pages.about != blank
+      assign secondary_url = pages.about.url
+    else
+      assign secondary_url = '/pages/about'
+    endif
+  endif
+-%}
+
+<section class="contact-close full-width">
+  <div class="contact-close__inner" data-contact-watch>
+    {%- if section.settings.heading != blank -%}
+      <h2 class="contact-close__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.copy != blank -%}
+      <p class="contact-close__copy">{{ section.settings.copy | escape }}</p>
+    {%- endif -%}
+    <div class="contact-close__actions">
+      {%- if section.settings.cta_label != blank -%}
+        <a class="contact-close__button" href="{{ cta_url }}">
+          {{ section.settings.cta_label | escape }}
+          <span class="contact-close__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.secondary_label != blank -%}
+        <a class="contact-close__link" href="{{ secondary_url }}">{{ section.settings.secondary_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact close",
+  "tag": "div",
+  "class": "section-contact",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Still exploring?"
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Supporting text",
+      "default": "Discover the rituals created to make everyday skincare feel beautifully simple."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Shop skincare"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "info": "Leave empty to open the Shop page."
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary link label",
+      "info": "Leave empty to hide the second link.",
+      "default": "Learn about Lūmen"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary link",
+      "info": "Leave empty to open the About page."
+    }
+  ],
+  "presets": [
+    { "name": "Contact close" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,20 @@
+{% comment %}
+  Shared Contact-page assets. Each Contact section renders this once.
+  The script guards itself, so a second copy does not run twice.
+{% endcomment %}
+<script>
+  (function () {
+    if (window.__contactMotion) return;
+    window.__contactMotion = true;
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('contact-js');
+    }
+    window.addEventListener('DOMContentLoaded', function () {
+      window.setTimeout(function () {
+        if (!window.LumenContact) document.documentElement.classList.remove('contact-js');
+      }, 1600);
+    });
+  })();
+</script>
+{{ 'contact.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'contact.js' | asset_url }}" defer></script>

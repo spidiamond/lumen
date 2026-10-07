@@ -1,0 +1,48 @@
+{% render 'contact-assets' %}
+
+{%- liquid
+  assign lines = section.settings.heading | newline_to_br | replace: '<br />', '|' | replace: '<br>', '|' | split: '|'
+-%}
+
+<section class="contact-invite full-width">
+  <div class="contact-invite__inner">
+    <h2 class="contact-invite__heading" data-contact-lines>
+      {%- for line in lines -%}
+        {%- assign clean = line | strip -%}
+        {%- if clean != blank -%}
+          <span class="contact-line" data-contact-line>{{ clean | escape }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </h2>
+    {%- if section.settings.copy != blank -%}
+      <p class="contact-invite__copy" data-contact-watch>{{ section.settings.copy | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Invitation",
+  "tag": "div",
+  "class": "section-contact",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "info": "One line per row.",
+      "default": "Good skincare starts\nwith listening."
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Supporting text",
+      "default": "Tell us what's on your mind. Whether you're looking for product guidance, need help with an order, or simply want to say hello, we're listening."
+    }
+  ],
+  "presets": [
+    { "name": "Invitation" }
+  ]
+}
+{% endschema %}

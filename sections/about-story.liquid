@@ -11,8 +11,25 @@
           {{ block.shopify_attributes }}
         >
           <div class="about-shift">
+            {%- liquid
+              assign story_fallback = blank
+              assign story_alt = blank
+              case forloop.index
+                when 1
+                  assign story_fallback = 'about-story-intention.jpg'
+                  assign story_alt = 'Botanical oil in a glass bottle'
+                when 2
+                  assign story_fallback = 'about-story-ritual.jpg'
+                  assign story_alt = 'A cream jar and a glass of water by a window'
+                when 3
+                  assign story_fallback = 'about-story-feel.jpg'
+                  assign story_alt = 'A swirl of cream'
+              endcase
+            -%}
             {% render 'about-media',
               image: block.settings.image,
+              fallback: story_fallback,
+              fallback_alt: story_alt,
               widths: '700, 1000, 1400, 1800',
               sizes: '(min-width: 900px) 48vw, 92vw'
             %}

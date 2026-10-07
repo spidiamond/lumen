@@ -4,13 +4,13 @@
   assign image_position = section.settings.image_position | default: 'center'
 -%}
 
-<section
-  class="about-hero full-width{% if section.settings.image == blank %} is-empty{% endif %}"
->
+<section class="about-hero full-width">
   <div class="about-hero__frame">
     <div class="about-hero__media">
       {% render 'about-media',
         image: section.settings.image,
+        fallback: 'about-hero.jpg',
+        fallback_alt: 'A cream jar and linen cloth in morning window light',
         widths: '750, 1100, 1600, 2000, 2400',
         sizes: '100vw',
         loading: 'eager',
