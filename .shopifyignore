@@ -11,3 +11,8 @@
 #
 # Ignore templates and sections with a regular expression:
 #   /(templates|sections)/.*\.json/
+
+# Local duplicate of templates/page.shop.json. Deploying it would register
+# a second "shop.local" page template. The Shop page uses the default page
+# template, which renders the designed catalog from sections/page.liquid.
+templates/page.shop.local.json

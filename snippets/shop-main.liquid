@@ -1,0 +1,109 @@
+{%- liquid
+  assign lead = lead
+  assign accent = accent
+  assign banner_position = banner_position | default: 'center 42%'
+  assign overlay = overlay | default: 26 | times: 0.01
+  if shop_collection == blank
+    assign shop_collection = collections.all
+  endif
+  assign section_id = section_id | default: 'shop'
+-%}
+
+<div
+  class="shop full-width"
+  style="--shop-overlay: {{ overlay }}; --shop-banner-position: {{ banner_position }};"
+>
+  <div class="shop-banner">
+    <div class="shop-banner__media">
+      <div class="shop-banner__zoom">
+        {%- if banner != blank -%}
+          {%- assign banner_alt = banner.alt | default: '' -%}
+          {{
+            banner
+            | image_url: width: 2400
+            | image_tag:
+              class: 'shop-banner__image',
+              widths: '750, 1100, 1500, 2000, 2400',
+              sizes: '100vw',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: banner_alt
+          }}
+        {%- else -%}
+          <img
+            class="shop-banner__image"
+            src="{{ 'landscape_banner.jpg' | asset_url }}"
+            alt=""
+            width="1920"
+            height="1080"
+            loading="eager"
+            fetchpriority="high"
+          >
+        {%- endif -%}
+      </div>
+      <div class="shop-banner__overlay" aria-hidden="true"></div>
+    </div>
+
+    {%- if lead != blank or accent != blank -%}
+      <div class="shop-banner__content">
+        <h1 class="shop-banner__heading">
+          {%- if lead != blank -%}
+            <span class="shop-banner__lead">{{ lead | escape }} </span>
+          {%- endif -%}
+          {%- if accent != blank -%}
+            <span class="shop-banner__accent">{{ accent | escape }}</span>
+          {%- endif -%}
+        </h1>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="shop__catalog">
+    {%- if show_label and label != blank -%}
+      <h2 class="shop__label" id="ShopLabel-{{ section_id }}">{{ label | escape }}</h2>
+    {%- endif -%}
+
+    {%- paginate shop_collection.products by 24 -%}
+      {%- if shop_collection.products_count == 0 -%}
+        <p class="shop__empty">There are no products in this collection yet.</p>
+      {%- else -%}
+        <ul
+          class="shop__grid"
+          role="list"
+          data-shop-grid
+          {% if show_label and label != blank %}
+            aria-labelledby="ShopLabel-{{ section_id }}"
+          {% endif %}
+        >
+          {%- for product in shop_collection.products -%}
+            {%- liquid
+              assign card_loading = 'lazy'
+              if forloop.index <= 3
+                assign card_loading = 'eager'
+              endif
+            -%}
+            <li class="shop__item" data-shop-item>
+              {% render 'product-card',
+                product: product,
+                sizes: '(min-width: 1100px) 22vw, 46vw',
+                loading: card_loading
+              %}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="shop__pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a class="shop__page-link" href="{{ paginate.previous.url }}">Previous</a>
+          {%- endif -%}
+          <span class="shop__page-status">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+          {%- if paginate.next -%}
+            <a class="shop__page-link" href="{{ paginate.next.url }}">Next</a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>

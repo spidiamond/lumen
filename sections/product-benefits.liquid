@@ -1,0 +1,83 @@
+{%- capture auto_items -%}
+  {%- render 'product-facts', product: product, as: 'benefit', skip_volume: true, limit: 4 -%}
+{%- endcapture -%}
+{%- assign auto_items = auto_items | strip -%}
+{%- assign has_blocks = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.settings.title != blank -%}
+    {%- assign has_blocks = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if has_blocks or auto_items != blank -%}
+  <section class="pp-band full-width" data-pp-reveal>
+    <div class="pp-band__inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="pp-kicker">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="pp-heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      <ol class="pp-benefits">
+        {%- if has_blocks -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.title != blank -%}
+              <li class="pp-benefit" data-pp-item {{ block.shopify_attributes }}>
+                <span class="pp-benefit__index" aria-hidden="true"></span>
+                <h3 class="pp-benefit__title">{{ block.settings.title | escape }}</h3>
+                {%- if block.settings.text != blank -%}
+                  <p class="pp-benefit__text">{{ block.settings.text | escape }}</p>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {{ auto_items }}
+        {%- endif -%}
+      </ol>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product benefits",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The essentials"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made for your everyday ritual."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4
+}
+{% endschema %}

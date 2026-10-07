@@ -30,6 +30,11 @@
   "collections": {
     "title": "Collections"
   },
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content"
+    }
+  },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
     "card": "Gift card",

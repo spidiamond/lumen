@@ -11,10 +11,119 @@
   "sections": {
     "main": {
       "type": "product",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Daily essential"
+      }
+    },
+    "benefits": {
+      "type": "product-benefits",
+      "settings": {
+        "eyebrow": "The essentials",
+        "heading": "Made for your everyday ritual."
+      }
+    },
+    "story": {
+      "type": "product-story",
+      "settings": {
+        "eyebrow": "The Lūmen approach",
+        "heading": "Made to disappear.",
+        "emphasis": "Designed to become essential.",
+        "copy": "A formula should earn its place in the day, then quietly stay there.",
+        "image_position": "center"
+      }
+    },
+    "keys": {
+      "type": "product-keys",
+      "blocks": {
+        "ritual": {
+          "type": "key",
+          "settings": {
+            "title": "Ritual",
+            "text": "A step that belongs in the day you already have."
+          }
+        },
+        "texture": {
+          "type": "key",
+          "settings": {
+            "title": "Texture",
+            "text": "A feel you notice at first, then forget."
+          }
+        },
+        "ease": {
+          "type": "key",
+          "settings": {
+            "title": "Ease",
+            "text": "Nothing extra between you and the routine."
+          }
+        }
+      },
+      "block_order": ["ritual", "texture", "ease"],
+      "settings": {
+        "heading": "Care, without the noise."
+      }
+    },
+    "ritual": {
+      "type": "product-ritual",
+      "blocks": {
+        "prepare": {
+          "type": "step",
+          "settings": {
+            "title": "Prepare",
+            "text": "Start with skin that is ready for this step."
+          }
+        },
+        "apply": {
+          "type": "step",
+          "settings": {
+            "title": "Apply",
+            "text": "Use a comfortable amount and work it through."
+          }
+        },
+        "settle": {
+          "type": "step",
+          "settings": {
+            "title": "Settle",
+            "text": "Give it a moment, then continue your ritual."
+          }
+        }
+      },
+      "block_order": ["prepare", "apply", "settle"],
+      "settings": {
+        "heading": "Your ritual, simplified."
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "eyebrow": "Reviews",
+        "heading": "Notes from the ritual.",
+        "copy": "Customer notes will appear here once reviews are connected. Nothing is invented in the meantime."
+      }
+    },
+    "related": {
+      "type": "product-related",
+      "settings": {
+        "heading": "Complete your ritual."
+      }
+    },
+    "close": {
+      "type": "product-close",
+      "settings": {
+        "heading": "Your skin,",
+        "emphasis": "beautifully considered.",
+        "copy": "Discover the ritual behind Lūmen.",
+        "button": "Shop all"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "benefits",
+    "story",
+    "keys",
+    "ritual",
+    "reviews",
+    "related",
+    "close"
   ]
 }

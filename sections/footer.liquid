@@ -3,7 +3,6 @@
 {%- liquid
   assign newsletter_id = 'FooterNewsletter-' | append: section.id
   assign country_id = 'FooterCountry-' | append: section.id
-  assign flag_codes = 'US,DE,GB,AU,CA,JP,IN' | split: ','
 
   if section.settings.use_store_contact
     assign contact_name = shop.name
@@ -23,8 +22,19 @@
     assign has_socials = true
   endif
 
+  assign currency_codes = 'USD,EUR,GBP,AUD,CAD,JPY,INR' | split: ','
+  assign currency_countries = 'US,DE,GB,AU,CA,JP,IN' | split: ','
+  assign active_currency = localization.country.currency.iso_code | default: shop.currency
+  assign active_flag = currency_countries[0]
+  for currency_code in currency_codes
+    if currency_code == active_currency
+      assign active_flag = currency_countries[forloop.index0]
+      break
+    endif
+  endfor
+
   assign show_localization = false
-  if section.settings.show_country_selector and localization.available_countries.size > 1
+  if section.settings.show_country_selector
     assign show_localization = true
   endif
 
@@ -66,21 +76,19 @@
         {%- endif -%}
 
         {%- if show_localization -%}
-          {%- form 'localization', class: 'site-footer__localization', data-footer-localization: '' -%}
-            <label class="site-footer__visually-hidden" for="{{ country_id }}">Country/region</label>
+          <div class="site-footer__localization">
+            <label class="site-footer__visually-hidden" for="{{ country_id }}">Currency</label>
             <div class="site-footer__select">
-              {%- if flag_codes contains localization.country.iso_code -%}
-                {% render 'currency-flag', code: localization.country.iso_code %}
-              {%- endif -%}
-              <select id="{{ country_id }}" name="country_code" data-footer-country>
-                {%- for country in localization.available_countries -%}
+              <span data-currency-flag>{% render 'currency-flag', code: active_flag %}</span>
+              <select id="{{ country_id }}" data-footer-country>
+                {%- for currency_code in currency_codes -%}
                   <option
-                    value="{{ country.iso_code }}"
-                    {% if country.iso_code == localization.country.iso_code %}
+                    value="{{ currency_code }}"
+                    {% if currency_code == active_currency %}
                       selected
                     {% endif %}
                   >
-                    {{- country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol -}})
+                    {{- currency_code -}}
                   </option>
                 {%- endfor -%}
               </select>
@@ -88,10 +96,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 4.5 6 8l3.5-3.5"/>
               </svg>
             </div>
-            <noscript>
-              <button class="site-footer__localization-submit" type="submit">Update</button>
-            </noscript>
-          {%- endform -%}
+          </div>
         {%- endif -%}
       </div>
 
@@ -363,36 +368,6 @@
     window.addEventListener('resize', updateReveal);
     if ('ResizeObserver' in window) new ResizeObserver(updateReveal).observe(footerSection);
 
-    var select = footer.querySelector('[data-footer-country]');
-    if (select) {
-      var initial = select.value;
-      var pendingKeyboardChange = false;
-
-      function submit() {
-        pendingKeyboardChange = false;
-        if (select.value !== initial) select.form.submit();
-      }
-
-      // Arrow keys change a closed select immediately; wait for Enter or blur so keyboard users can browse.
-      select.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          submit();
-        } else if (event.key !== 'Tab') {
-          pendingKeyboardChange = true;
-        }
-      });
-      select.addEventListener('pointerdown', function () {
-        pendingKeyboardChange = false;
-      });
-      select.addEventListener('change', function () {
-        if (!pendingKeyboardChange) submit();
-      });
-      select.addEventListener('blur', function () {
-        if (pendingKeyboardChange) submit();
-      });
-    }
-
     var newsletter = footer.querySelector('[data-footer-newsletter]');
     if (newsletter) {
       var email = newsletter.querySelector('input[type="email"]');
@@ -488,7 +463,7 @@
       "type": "checkbox",
       "id": "show_country_selector",
       "label": "Show country/currency selector",
-      "info": "Uses the countries enabled in Settings → Markets.",
+      "info": "Shows the same currencies as the navbar.",
       "default": true
     },
     {

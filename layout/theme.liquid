@@ -30,13 +30,27 @@
   </head>
 
   <body class="template-{{ template.name }}">
+    <a class="skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
     {% sections 'header-group' %}
+
+    <div id="MainContent" class="skip-target" tabindex="-1"></div>
 
     {{ content_for_layout }}
 
     {% sections 'footer-group' %}
 
+    {% section 'cart-drawer' %}
+
     {% render 'back-to-top' %}
+
+    <script>
+      window.LumenCurrencyConfig = {
+        shop: {{ shop.currency | json }},
+        codes: ['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'JPY', 'INR']
+      };
+    </script>
+    <script src="{{ 'currency.js' | asset_url }}"></script>
 
     <script src="{{ 'theme.js' | asset_url }}" defer></script>
     <script src="{{ 'scroll-feel.js' | asset_url }}" defer></script>

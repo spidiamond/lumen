@@ -202,7 +202,8 @@
   transition: background-color 280ms ease;
 }
 
-.site-footer__select .site-header__flag ~ select {
+.site-footer__select .site-header__flag ~ select,
+.site-footer__select [data-currency-flag] ~ select {
   padding-left: 34px;
 }
 

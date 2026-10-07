@@ -1,37 +1,52 @@
-{{ 'product-page.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'product-page.js' | asset_url }}" defer></script>
+{% render 'product-assets' %}
 
 {%- liquid
   assign current = product.selected_or_first_available_variant
   assign gallery_id = 'ProductGallery-' | append: section.id
+  assign form_id = 'ProductForm-' | append: section.id
+  assign qty_id = 'Quantity-' | append: section.id
+  assign image_count = product.images.size
+
+  assign eyebrow = section.settings.eyebrow
+  if product.type != blank
+    assign eyebrow = product.type
+  endif
+
+  assign badge = ''
+  if product.tags contains 'best-seller' or product.tags contains 'Best Seller'
+    assign badge = 'Best seller'
+  elsif product.tags contains 'new' or product.tags contains 'New'
+    assign badge = 'New'
+  endif
+
+  assign qty_min = 1
+  if current.quantity_rule.min != blank and current.quantity_rule.min > 0
+    assign qty_min = current.quantity_rule.min
+  endif
 -%}
 
-<article class="product-page full-width" data-product-page>
-  <div class="product-page__layout">
-    <div class="product-page__gallery" id="{{ gallery_id }}">
-      {%- if product.images.size > 1 -%}
-        <ul class="product-page__thumbs" role="list">
+<div class="pp-hero full-width" data-product-page>
+  <div class="pp-hero__layout">
+    <div class="pp-gallery" id="{{ gallery_id }}">
+      {%- if image_count > 1 -%}
+        <ul class="pp-thumbs" role="list">
           {%- for image in product.images -%}
             <li>
               <button
-                class="product-page__thumb"
+                class="pp-thumb"
                 type="button"
-                data-product-thumb
-                aria-label="Show image {{ forloop.index }} of {{ product.images.size }}"
+                data-pp-thumb
+                data-index="{{ forloop.index0 }}"
+                aria-label="Show image {{ forloop.index }} of {{ image_count }}"
                 aria-controls="{{ gallery_id }}-stage"
-                {% if forloop.first %}
-                  aria-current="true"
-                {% endif %}
-                data-full="{{ image | image_url: width: 1600 }}"
-                data-srcset="{{ image | image_url: width: 700 }} 700w, {{ image | image_url: width: 1100 }} 1100w, {{ image | image_url: width: 1600 }} 1600w"
-                data-alt="{{ image.alt | default: product.title | escape }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
               >
                 {{
                   image
-                  | image_url: width: 180
+                  | image_url: width: 200
                   | image_tag:
-                    widths: '90, 180',
-                    sizes: '72px',
+                    widths: '100, 200',
+                    sizes: '76px',
                     loading: 'lazy',
                     alt: ''
                 }}
@@ -41,77 +56,127 @@
         </ul>
       {%- endif -%}
 
-      <div class="product-page__stage" id="{{ gallery_id }}-stage">
-        {%- if product.featured_image -%}
-          {{
-            product.featured_image
-            | image_url: width: 1600
-            | image_tag:
-              class: 'product-page__photo',
-              widths: '700, 1100, 1600',
-              sizes: '(min-width: 900px) 48vw, 92vw',
-              loading: 'eager',
-              fetchpriority: 'high',
-              alt: product.featured_image.alt | default: product.title,
-              data-product-photo: ''
-          }}
+      <div class="pp-stage" id="{{ gallery_id }}-stage">
+        {%- if image_count > 0 -%}
+          <div class="pp-scroller" data-pp-scroller tabindex="0" aria-label="Product images">
+            {%- for image in product.images -%}
+              <div
+                class="pp-slide{% if forloop.first %} is-active{% endif %}"
+                data-pp-slide
+                data-index="{{ forloop.index0 }}"
+                data-image-id="{{ image.id }}"
+                data-full="{{ image | image_url: width: 2000 }}"
+                data-alt="{{ image.alt | default: product.title | escape }}"
+                {% unless forloop.first %}aria-hidden="true"{% endunless %}
+              >
+                <div class="pp-slide__zoom">
+                  {%- if forloop.first -%}
+                    {{
+                      image
+                      | image_url: width: 1600
+                      | image_tag:
+                        widths: '600, 900, 1200, 1600',
+                        sizes: '(min-width: 1000px) 54vw, 92vw',
+                        loading: 'eager',
+                        fetchpriority: 'high',
+                        alt: image.alt | default: product.title
+                    }}
+                  {%- else -%}
+                    {{
+                      image
+                      | image_url: width: 1600
+                      | image_tag:
+                        widths: '600, 900, 1200, 1600',
+                        sizes: '(min-width: 1000px) 54vw, 92vw',
+                        loading: 'lazy',
+                        alt: image.alt | default: product.title
+                    }}
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+          <button class="pp-enlarge" type="button" data-pp-open>
+            View larger
+          </button>
+          <p class="pp-count" {% if image_count < 2 %}hidden{% endif %}>
+            <span data-pp-count>1</span>
+            <span aria-hidden="true"> / {{ image_count }}</span>
+            <span class="visually-hidden">of {{ image_count }}</span>
+          </p>
         {%- else -%}
-          <span class="product-page__photo product-page__photo--empty">{{ 'product-1' | placeholder_svg_tag }}</span>
+          <div class="pp-placeholder" aria-hidden="true"><span>Add image</span></div>
         {%- endif -%}
       </div>
     </div>
 
-    <div class="product-page__info">
-      <h1 class="product-page__title">{{ product.title }}</h1>
-
-      {%- liquid
-        assign badge = ''
-        if product.tags contains 'best-seller' or product.tags contains 'Best Seller'
-          assign badge = 'Best seller'
-        elsif product.tags contains 'new' or product.tags contains 'New'
-          assign badge = 'New'
-        endif
-      -%}
-      {%- if badge != '' -%}
-        <p class="product-page__badge">{{ badge }}</p>
+    <div class="pp-buy">
+      {%- if badge != blank -%}
+        <p class="pp-kicker">{{ badge }}</p>
+      {%- elsif eyebrow != blank -%}
+        <p class="pp-kicker">{{ eyebrow | escape }}</p>
       {%- endif -%}
 
-      <p class="product-page__price" data-product-price>
-        {%- if current.compare_at_price > current.price -%}
-          <s class="product-page__compare" data-product-compare>{{ current.compare_at_price | money }}</s>
-          <span class="product-page__sale" data-product-current>{{ current.price | money }}</span>
-        {%- else -%}
-          <s class="product-page__compare" data-product-compare hidden></s>
-          <span data-product-current>{{ current.price | money }}</span>
+      <h1 class="pp-title">{{ product.title }}</h1>
+
+      <p class="pp-price" data-pp-price>
+        <s class="pp-compare" data-pp-compare {% unless current.compare_at_price > current.price %}hidden{% endunless %}>
+          {%- if current.compare_at_price > current.price -%}
+            <span data-shop-cents="{{ current.compare_at_price }}">{{ current.compare_at_price | money }}</span>
+          {%- endif -%}
+        </s>
+        <span data-pp-current data-shop-cents="{{ current.price }}">{{ current.price | money }}</span>
+      </p>
+
+      <p class="pp-stock" data-pp-stock {% if current.available %}data-state="ready"{% else %}data-state="sold"{% endif %}>
+        <span class="pp-stock__dot" aria-hidden="true"></span>
+        <span data-pp-stock-label>{%- if current.available -%}In stock{%- else -%}Sold out{%- endif -%}</span>
+      </p>
+
+      {%- if section.settings.statement != blank -%}
+        <p class="pp-statement">{{ section.settings.statement | escape }}</p>
+      {%- else -%}
+        {%- capture statement -%}{% render 'product-copy', product: product, part: 'statement' %}{%- endcapture -%}
+        {%- assign statement = statement | strip -%}
+        {%- if statement != blank -%}
+          <p class="pp-statement">{{ statement }}</p>
         {%- endif -%}
-      </p>
-
-      <p class="product-page__stock" data-product-stock {% if current.available %}data-state="ready"{% else %}data-state="sold"{% endif %}>
-        <span class="product-page__stock-dot" aria-hidden="true"></span>
-        <span data-product-stock-label>
-          {%- if current.available -%}In stock{%- else -%}Sold out{%- endif -%}
-        </span>
-      </p>
-
-      {%- if product.description != blank -%}
-        <div class="product-page__copy" data-product-copy>{{ product.description }}</div>
-        <button class="product-page__more" type="button" data-product-more hidden>Read more</button>
       {%- endif -%}
 
-      {% form 'product', product, class: 'product-page__form', data-product-form: '' %}
-        <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
+      {%- capture chips -%}
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.text != blank -%}
+              <li {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- render 'product-facts', product: product, as: 'chip', skip_volume: true, limit: 3 -%}
+        {%- endif -%}
+      {%- endcapture -%}
+      {%- assign chips = chips | strip -%}
+      {%- if chips != blank -%}
+        <ul class="pp-chips">{{ chips }}</ul>
+      {%- endif -%}
+
+      {% form 'product', product, id: form_id, class: 'pp-form', data-product-form: '' %}
+        <input type="hidden" name="id" value="{{ current.id }}" data-pp-variant>
+
+        {%- if form.errors -%}
+          <div class="pp-errors" role="alert">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
 
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
-            <fieldset class="product-page__option">
-              <legend class="product-page__label">{{ option.name }}</legend>
-              {%- if option.values.size <= 4 -%}
-                <div class="product-page__choices">
+            <fieldset class="pp-option">
+              <legend class="pp-label">{{ option.name }}</legend>
+              {%- if option.values.size <= 6 -%}
+                <div class="pp-choices">
                   {%- for value in option.values -%}
-                    <label class="product-page__choice">
+                    <label class="pp-choice">
                       <input
                         type="radio"
-                        name="option-{{ option.position }}"
+                        name="option-{{ section.id }}-{{ option.position }}"
                         value="{{ value | escape }}"
                         data-option-position="{{ option.position }}"
                         {% if option.selected_value == value %}checked{% endif %}
@@ -121,7 +186,7 @@
                   {%- endfor -%}
                 </div>
               {%- else -%}
-                <select class="product-page__select" data-option-position="{{ option.position }}" aria-label="{{ option.name | escape }}">
+                <select class="pp-select" data-option-position="{{ option.position }}" aria-label="{{ option.name | escape }}">
                   {%- for value in option.values -%}
                     <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
                   {%- endfor -%}
@@ -131,39 +196,93 @@
           {%- endfor -%}
         {%- endunless -%}
 
-        <div class="product-page__buy">
-          <div class="product-page__qty">
-            <button class="product-page__qty-btn" type="button" data-qty-minus aria-label="Decrease quantity">−</button>
-            <label class="visually-hidden" for="Quantity-{{ section.id }}">Quantity</label>
-            <input id="Quantity-{{ section.id }}" class="product-page__qty-input" type="number" name="quantity" value="1" min="1" inputmode="numeric">
-            <button class="product-page__qty-btn" type="button" data-qty-plus aria-label="Increase quantity">+</button>
+        {%- if product.selling_plan_groups.size > 0 -%}
+          <fieldset class="pp-option">
+            <legend class="pp-label">Purchase</legend>
+            <div class="pp-choices">
+              {%- unless product.requires_selling_plan -%}
+                <label class="pp-choice">
+                  <input type="radio" name="selling_plan" value="" checked>
+                  <span>One-time</span>
+                </label>
+              {%- endunless -%}
+              {%- for group in product.selling_plan_groups -%}
+                {%- for plan in group.selling_plans -%}
+                  <label class="pp-choice">
+                    <input
+                      type="radio"
+                      name="selling_plan"
+                      value="{{ plan.id }}"
+                      {% if product.requires_selling_plan and forloop.parentloop.first and forloop.first %}checked{% endif %}
+                    >
+                    <span>{{ plan.name }}</span>
+                  </label>
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endif -%}
+
+        <div class="pp-actions" data-purchase-anchor>
+          <div class="pp-qty">
+            <button class="pp-qty__btn" type="button" data-pp-minus aria-label="Decrease quantity">−</button>
+            <label class="visually-hidden" for="{{ qty_id }}">Quantity</label>
+            <input
+              id="{{ qty_id }}"
+              class="pp-qty__input"
+              type="number"
+              name="quantity"
+              value="{{ qty_min }}"
+              min="{{ qty_min }}"
+              inputmode="numeric"
+              data-pp-qty
+            >
+            <button class="pp-qty__btn" type="button" data-pp-plus aria-label="Increase quantity">+</button>
           </div>
 
-          <button class="product-page__add" type="submit" name="add" data-product-add {% unless current.available %}disabled{% endunless %}>
-            <span data-product-add-label>
-              {%- if current.available -%}Add to cart{% else %}Sold out{% endif %}
+          <button class="pp-add" type="submit" name="add" data-pp-add {% unless current.available %}disabled{% endunless %}>
+            <span class="pp-add__text">
+              <span data-pp-add-label>{%- if current.available -%}Add to cart{%- else -%}Sold out{%- endif -%}</span>
+              <span data-pp-add-state aria-hidden="true">Added</span>
             </span>
-            <span data-product-add-price {% unless current.available %}hidden{% endunless %}>– {{ current.price | money }}</span>
+            <span class="pp-add__arrow" aria-hidden="true">&rarr;</span>
           </button>
         </div>
 
-        <div class="product-page__checkout">
+        <div class="pp-checkout">
           {{ form | payment_button }}
         </div>
 
-        <p class="visually-hidden" role="status" data-product-status></p>
+        <p class="visually-hidden" role="status" data-pp-status></p>
       {% endform %}
+
+      {%- capture notes -%}
+        {%- if section.settings.note_1 != blank -%}
+          <li>{{ section.settings.note_1 | escape }}</li>
+        {%- endif -%}
+        {%- if section.settings.note_2 != blank -%}
+          <li>{{ section.settings.note_2 | escape }}</li>
+        {%- endif -%}
+        {%- if section.settings.note_3 != blank -%}
+          <li>{{ section.settings.note_3 | escape }}</li>
+        {%- endif -%}
+        {%- if shop.shipping_policy != blank -%}
+          <li><a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | escape }}</a></li>
+        {%- endif -%}
+        {%- if shop.refund_policy != blank -%}
+          <li><a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | escape }}</a></li>
+        {%- endif -%}
+      {%- endcapture -%}
+      {%- assign notes = notes | strip -%}
+      {%- if notes != blank -%}
+        <ul class="pp-notes">{{ notes }}</ul>
+      {%- endif -%}
 
       {%- assign shown_pickup = false -%}
       {%- for availability in current.store_availabilities -%}
         {%- if availability.pick_up_enabled and availability.available and shown_pickup == false -%}
           {%- assign shown_pickup = true -%}
-          <div class="product-page__pickup">
-            <span class="product-page__pickup-mark" aria-hidden="true">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.5 8.2 6.4 11 12.5 5"/>
-              </svg>
-            </span>
+          <div class="pp-pickup">
             <p>
               <strong>Pickup available at {{ availability.location.name }}</strong>
               {%- if availability.pick_up_time != blank -%}
@@ -176,26 +295,109 @@
     </div>
   </div>
 
-  <script type="application/json" data-product-variants>
+  <div class="pp-bar" data-pp-bar aria-hidden="true">
+    <div class="pp-bar__copy">
+      <p class="pp-bar__title">{{ product.title }}</p>
+      <p class="pp-bar__price" data-pp-bar-price data-shop-cents="{{ current.price }}">{{ current.price | money }}</p>
+    </div>
+    <button
+      class="pp-add pp-bar__add"
+      type="submit"
+      name="add"
+      form="{{ form_id }}"
+      data-pp-add
+      {% unless current.available %}disabled{% endunless %}
+    >
+      <span class="pp-add__text">
+        <span data-pp-add-label>{%- if current.available -%}Add to cart{%- else -%}Sold out{%- endif -%}</span>
+        <span data-pp-add-state aria-hidden="true">Added</span>
+      </span>
+    </button>
+  </div>
+
+  {%- if image_count > 0 -%}
+    <dialog class="pp-viewer" data-pp-viewer aria-label="{{ product.title | escape }} images">
+      <button class="pp-viewer__close" type="button" data-pp-viewer-close aria-label="Close">Close</button>
+      <button class="pp-viewer__nav pp-viewer__nav--prev" type="button" data-pp-viewer-prev aria-label="Previous image" {% if image_count < 2 %}hidden{% endif %}>&larr;</button>
+      <figure class="pp-viewer__figure">
+        <img alt="" data-pp-viewer-img>
+        <figcaption data-pp-viewer-caption></figcaption>
+      </figure>
+      <button class="pp-viewer__nav pp-viewer__nav--next" type="button" data-pp-viewer-next aria-label="Next image" {% if image_count < 2 %}hidden{% endif %}>&rarr;</button>
+    </dialog>
+  {%- endif -%}
+
+  <script type="application/json" data-pp-variants>
     [
       {%- for variant in product.variants -%}
         {
           "id": {{ variant.id }},
           "available": {{ variant.available | json }},
           "price": {{ variant.price | money | json }},
+          "price_cents": {{ variant.price }},
           "compare": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | json }}{% else %}""{% endif %},
-          "options": {{ variant.options | json }}
+          "compare_cents": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price }}{% else %}null{% endif %},
+          "options": {{ variant.options | json }},
+          "image_id": {% if variant.featured_image %}{{ variant.featured_image.id }}{% else %}null{% endif %},
+          "min": {{ variant.quantity_rule.min | default: 1 | json }},
+          "max": {% if variant.inventory_management and variant.inventory_policy == 'deny' and variant.inventory_quantity > 0 %}{{ variant.inventory_quantity }}{% else %}null{% endif %}
         }{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
     ]
   </script>
-</article>
+</div>
 
 {% schema %}
 {
   "name": "Product",
   "tag": "div",
   "class": "section-product",
-  "settings": []
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Daily essential",
+      "info": "Replaced by the product type when one is set."
+    },
+    {
+      "type": "textarea",
+      "id": "statement",
+      "label": "Short statement",
+      "info": "Leave empty to use the product's opening line."
+    },
+    {
+      "type": "text",
+      "id": "note_1",
+      "label": "Reassurance line 1",
+      "info": "Leave empty to hide. Shipping and refund policies are linked automatically when the store has them."
+    },
+    {
+      "type": "text",
+      "id": "note_2",
+      "label": "Reassurance line 2"
+    },
+    {
+      "type": "text",
+      "id": "note_3",
+      "label": "Reassurance line 3"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "info": "Leave all benefits empty to use lines from the product description."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
 }
 {% endschema %}

@@ -1,0 +1,55 @@
+{% comment %}
+  Detail lines from the product description, after the word Details.
+  Size lines such as "50 ml" can be kept or skipped.
+
+  Accepts:
+  product
+  as: chip | benefit | spec
+  skip_volume: boolean
+  only_volume: boolean
+  limit: number
+{% endcomment %}
+{%- liquid
+  assign fact_limit = limit | default: 12
+  assign chunks = product.description | split: 'Details'
+  assign fact_html = ''
+  if chunks.size > 1
+    assign fact_html = chunks[1] | replace: '<br />', '<br>' | replace: '<br/>', '<br>'
+  endif
+  assign raw_lines = fact_html | split: '<br>'
+  assign shown = 0
+-%}
+{%- for raw in raw_lines -%}
+  {%- liquid
+    assign clean = raw | strip_html | replace: '•', '' | replace: '&#8226;', '' | replace: '&bull;', '' | strip
+    assign skip = false
+    if clean == blank or clean == 'Details'
+      assign skip = true
+    endif
+    assign words = clean | downcase | split: ' '
+    assign last_word = words | last
+    assign is_size = false
+    if last_word == 'ml' or last_word == 'g' or last_word == 'kg' or last_word == 'oz' or last_word == 'l'
+      assign is_size = true
+    endif
+    if skip == false and skip_volume and is_size
+      assign skip = true
+    endif
+    if skip == false and only_volume and is_size == false
+      assign skip = true
+    endif
+  -%}
+  {%- if skip == false and shown < fact_limit -%}
+    {%- assign shown = shown | plus: 1 -%}
+    {%- if as == 'benefit' -%}
+      <li class="pp-benefit" data-pp-item>
+        <span class="pp-benefit__index" aria-hidden="true"></span>
+        <h3 class="pp-benefit__title">{{ clean | escape }}</h3>
+      </li>
+    {%- elsif as == 'chip' -%}
+      <li>{{ clean | escape }}</li>
+    {%- else -%}
+      <li>{{ clean | escape }}</li>
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}

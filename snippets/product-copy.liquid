@@ -1,0 +1,31 @@
+{% comment %}
+  Splits a product description into the opening line and the paragraphs after it.
+  The Details list is left for product-facts.
+
+  Accepts:
+  product, part: statement | story
+{% endcomment %}
+{%- liquid
+  assign intro = product.description | split: 'Details' | first
+  assign paragraphs = intro | split: '</p>'
+  assign seen = 0
+-%}
+{%- if part == 'statement' -%}
+  {%- for paragraph in paragraphs -%}
+    {%- assign text = paragraph | strip_html | strip -%}
+    {%- if text != blank -%}
+      {{- text | escape -}}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- elsif part == 'story' -%}
+  {%- for paragraph in paragraphs -%}
+    {%- assign text = paragraph | strip_html | strip -%}
+    {%- if text != blank -%}
+      {%- assign seen = seen | plus: 1 -%}
+      {%- if seen > 1 -%}
+        <p>{{ text | escape }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

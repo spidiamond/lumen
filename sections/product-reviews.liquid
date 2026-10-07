@@ -1,0 +1,53 @@
+<section class="pp-reviews full-width" data-pp-reveal>
+  <div class="pp-reviews__inner">
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        {% render block %}
+      {%- endfor -%}
+    {%- else -%}
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="pp-kicker" data-pp-item>{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="pp-heading" data-pp-item>{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.copy != blank -%}
+        <p class="pp-reviews__copy" data-pp-item>{{ section.settings.copy | escape }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Reviews",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Reviews"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Notes from the ritual."
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Text",
+      "default": "Customer notes will appear here once reviews are connected. Nothing is invented in the meantime."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

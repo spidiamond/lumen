@@ -115,3 +115,30 @@ body {
 .shopify-section > .full-width {
   grid-column: 1 / -1;
 }
+
+.skip-link {
+  position: absolute;
+  left: max(16px, env(safe-area-inset-left));
+  top: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: #161616;
+  color: #f4ece4;
+  font-family: var(--nav-font, system-ui, sans-serif);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid #f4ece4;
+  outline-offset: 2px;
+}
+
+.skip-target:focus {
+  outline: none;
+}

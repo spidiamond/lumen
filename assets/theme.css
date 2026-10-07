@@ -370,6 +370,7 @@ body:not(.template-index) .logo-flight {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
+  background-color: var(--hero-fallback);
   background:
     radial-gradient(120% 80% at 50% 40%, color-mix(in srgb, var(--hero-fallback), white 18%), transparent 60%),
     linear-gradient(180deg, color-mix(in srgb, var(--hero-fallback), white 22%) 0%, var(--hero-fallback) 48%, color-mix(in srgb, var(--hero-fallback), black 16%) 100%);

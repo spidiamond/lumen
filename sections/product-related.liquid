@@ -1,0 +1,63 @@
+{%- liquid
+  assign related_source = collections.all
+  for collection in product.collections
+    if collection.handle != 'all' and collection.handle != 'frontpage' and collection.all_products_count > 1
+      assign related_source = collection
+      break
+    endif
+  endfor
+-%}
+
+<section
+  class="pp-related full-width"
+  data-pp-related
+  data-pp-reveal
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=3&intent=related"
+>
+  <div class="pp-related__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="pp-heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <ul class="pp-related__grid" data-pp-related-grid>
+      {%- if recommendations.performed -%}
+        {%- for related in recommendations.products limit: 3 -%}
+          <li data-pp-item>
+            {% render 'product-card', product: related, sizes: '(min-width: 1000px) 28vw, 80vw', loading: 'lazy' %}
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign shown = 0 -%}
+        {%- for related in related_source.products -%}
+          {%- if related.id == product.id -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- if shown >= 3 -%}
+            {%- break -%}
+          {%- endif -%}
+          <li data-pp-item>
+            {% render 'product-card', product: related, sizes: '(min-width: 1000px) 28vw, 80vw', loading: 'lazy' %}
+          </li>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Complete your ritual",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete your ritual."
+    }
+  ]
+}
+{% endschema %}

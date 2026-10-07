@@ -1,0 +1,119 @@
+{{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign ship_cents = section.settings.free_shipping | times: 100
+  assign shop_url = section.settings.shop_link
+  if shop_url == blank
+    if pages.shop != blank
+      assign shop_url = pages.shop.url
+    else
+      assign shop_url = routes.all_products_collection_url
+    endif
+  endif
+-%}
+
+<div
+  class="cart-root"
+  data-cart-root
+  data-cart-currency="{{ cart.currency.iso_code | default: shop.currency }}"
+  data-ship="{{ ship_cents }}"
+  data-shop-url="{{ shop_url }}"
+>
+  <dialog class="cart-drawer" data-cart-drawer aria-labelledby="CartDrawerTitle">
+    <button class="cart-drawer__backdrop" type="button" data-cart-close tabindex="-1" aria-label="Close cart"></button>
+    <div class="cart-drawer__panel">
+      <header class="cart-drawer__head">
+        <div>
+          <h2 class="cart-drawer__title" id="CartDrawerTitle">Your ritual</h2>
+          <p class="cart-drawer__count" data-cart-count>0 items</p>
+        </div>
+        <button class="cart-drawer__close" type="button" data-cart-close aria-label="Close">Close</button>
+      </header>
+
+      <div class="cart-ship" data-cart-ship hidden>
+        <p data-cart-ship-copy></p>
+        <div class="cart-ship__track" aria-hidden="true">
+          <span class="cart-ship__bar" data-cart-meter></span>
+        </div>
+      </div>
+
+      <div class="cart-drawer__body">
+        <div class="cart-empty" data-cart-empty>
+          <p class="cart-empty__title">Your ritual awaits</p>
+          <p class="cart-empty__copy">Your skincare ritual is currently empty.</p>
+          <a class="cart-empty__link" href="{{ shop_url }}">Explore our essentials <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <ul class="cart-lines" data-cart-lines hidden></ul>
+        <div class="cart-upsell" data-cart-upsell hidden></div>
+      </div>
+
+      <div class="cart-note" data-cart-note-wrap hidden>
+        <button class="cart-note__toggle" type="button" data-cart-note-toggle aria-expanded="false" aria-controls="CartNotePanel">
+          Add a note
+        </button>
+        <div class="cart-note__panel" id="CartNotePanel">
+          <div class="cart-note__inner">
+            <label class="visually-hidden" for="CartNote">Order note</label>
+            <textarea id="CartNote" class="cart-note__field" data-cart-note rows="3" placeholder="A note for this order"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <footer class="cart-summary" data-cart-summary hidden>
+        <p class="cart-error" data-cart-error hidden></p>
+        <div class="cart-summary__row">
+          <span>Subtotal</span>
+          <strong data-cart-subtotal></strong>
+        </div>
+        <p class="cart-summary__note">Shipping and taxes calculated at checkout.</p>
+        <form action="{{ routes.cart_url }}" method="post" data-cart-checkout>
+          <button class="cart-checkout" type="submit" name="checkout">
+            <span>Checkout</span>
+            <span class="cart-checkout__arrow" aria-hidden="true">&rarr;</span>
+          </button>
+        </form>
+        <a class="cart-summary__page" href="{{ routes.cart_url }}">View cart</a>
+      </footer>
+    </div>
+  </dialog>
+
+  <div class="cart-toast" data-cart-toast hidden>
+    <p class="cart-toast__kicker">Added to your ritual</p>
+    <div class="cart-toast__row">
+      <img class="cart-toast__img" alt="" data-cart-toast-img width="64" height="64" hidden>
+      <div>
+        <p class="cart-toast__title" data-cart-toast-title></p>
+        <p class="cart-toast__price" data-cart-toast-price></p>
+      </div>
+    </div>
+    <div class="cart-toast__actions">
+      <button class="cart-toast__view" type="button" data-cart-toast-view>View cart</button>
+      <button class="cart-toast__dismiss" type="button" data-cart-toast-dismiss>Continue shopping</button>
+    </div>
+  </div>
+  <p class="visually-hidden" role="status" data-cart-status></p>
+</div>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "tag": "div",
+  "class": "section-cart-drawer",
+  "settings": [
+    {
+      "type": "number",
+      "id": "free_shipping",
+      "label": "Free shipping threshold",
+      "default": 75,
+      "info": "In your store currency. Set to 0 to hide. This does not create a shipping rate by itself."
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Empty cart link",
+      "info": "Leave empty to open the Shop page."
+    }
+  ]
+}
+{% endschema %}

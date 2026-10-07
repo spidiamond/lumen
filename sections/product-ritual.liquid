@@ -1,0 +1,117 @@
+{%- assign has_steps = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.settings.title != blank -%}
+    {%- assign has_steps = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if has_steps -%}
+  <section class="pp-band full-width" data-pp-reveal>
+    <div class="pp-band__inner">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="pp-heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      <ol class="pp-steps">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.title != blank -%}
+            {%- assign step_index = forloop.index | prepend: '0' | slice: -2, 2 -%}
+            <li class="pp-step" data-pp-item {{ block.shopify_attributes }}>
+              <div class="pp-step__frame">
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      class: 'pp-step__img',
+                      widths: '400, 700, 1000, 1200',
+                      sizes: '(min-width: 1000px) 28vw, 84vw',
+                      loading: 'lazy',
+                      alt: block.settings.image.alt | default: block.settings.title
+                  }}
+                {%- else -%}
+                  {%- liquid
+                    assign step_fallback = ''
+                    assign step_alt = block.settings.title
+                    if forloop.index == 1
+                      assign step_fallback = 'product-ritual-prepare.jpg'
+                      assign step_alt = 'A bowl of water and linen before the ritual'
+                    elsif forloop.index == 2
+                      assign step_fallback = 'product-ritual-apply.jpg'
+                      assign step_alt = 'A drop of serum on the hand'
+                    elsif forloop.index == 3
+                      assign step_fallback = 'product-ritual-settle.jpg'
+                      assign step_alt = 'Skin in soft morning light'
+                    endif
+                  -%}
+                  {%- if step_fallback != blank -%}
+                    <img
+                      class="pp-step__img"
+                      src="{{ step_fallback | asset_url }}"
+                      alt="{{ step_alt | escape }}"
+                      width="1200"
+                      height="1600"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    <div class="pp-placeholder pp-placeholder--step" aria-hidden="true">
+                      <span class="pp-step__ghost">{{ step_index }}</span>
+                      <span>Add image</span>
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+              <p class="pp-step__index">{{ step_index }}</p>
+              <h3 class="pp-step__title">{{ block.settings.title | escape }}</h3>
+              {%- if block.settings.text != blank -%}
+                <p class="pp-step__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ol>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "How to use",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your ritual, simplified."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Prepare"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Start with skin that is ready for this step."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4
+}
+{% endschema %}

@@ -107,6 +107,12 @@
 
   function syncVideo(scrollY) {
     if (!video) return;
+    if (motionQuery.matches) {
+      video.pause();
+      video.autoplay = false;
+      videoOffscreen = true;
+      return;
+    }
     var offscreen = hero.offsetTop + hero.offsetHeight - scrollY < 0;
     if (offscreen === videoOffscreen) return;
     videoOffscreen = offscreen;
@@ -127,6 +133,10 @@
   }
 
   function applyReduced(scrollY) {
+    if (video) {
+      video.pause();
+      video.autoplay = false;
+    }
     var nextScrolled = scrollY > 24;
     if (nextScrolled === scrolled && flight.style.transform) return;
     scrolled = nextScrolled;
@@ -171,11 +181,17 @@
 
   if (video) {
     video.muted = true;
+    video.playsInline = true;
     video.addEventListener('error', function () {
       hero.classList.add('home-hero--fallback');
     });
-    var firstPlay = video.play();
-    if (firstPlay && typeof firstPlay.catch === 'function') firstPlay.catch(function () {});
+    if (motionQuery.matches) {
+      video.pause();
+      video.autoplay = false;
+    } else {
+      var firstPlay = video.play();
+      if (firstPlay && typeof firstPlay.catch === 'function') firstPlay.catch(function () {});
+    }
   } else {
     hero.classList.add('home-hero--fallback');
   }

@@ -1,0 +1,105 @@
+{%- capture story_html -%}{% render 'product-copy', product: product, part: 'story' %}{%- endcapture -%}
+{%- assign story_html = story_html | strip -%}
+
+<section class="pp-story full-width" data-pp-reveal>
+  <div class="pp-story__layout">
+    <div class="pp-frame" style="--pp-pos: {{ section.settings.image_position }};">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1800
+          | image_tag:
+            class: 'pp-frame__img',
+            widths: '600, 900, 1200, 1600, 1800',
+            sizes: '(min-width: 1000px) 52vw, 92vw',
+            loading: 'lazy',
+            alt: section.settings.image.alt | default: section.settings.heading
+        }}
+      {%- else -%}
+        <img
+          class="pp-frame__img"
+          src="{{ 'product-story.jpg' | asset_url }}"
+          alt="A serum bottle in morning window light"
+          width="1200"
+          height="1600"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </div>
+
+    <div class="pp-story__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="pp-kicker" data-pp-item>{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank or section.settings.emphasis != blank -%}
+        <h2 class="pp-story__heading" data-pp-item>
+          {%- if section.settings.heading != blank -%}
+            {{ section.settings.heading | escape }}
+          {%- endif -%}
+          {%- if section.settings.emphasis != blank -%}
+            <span>{{ section.settings.emphasis | escape }}</span>
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+      <div class="pp-story__text" data-pp-item>
+        {%- if story_html != blank -%}
+          {{ story_html }}
+        {%- elsif section.settings.copy != blank -%}
+          {{ section.settings.copy | escape | newline_to_br }}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product story",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Lūmen approach"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made to disappear."
+    },
+    {
+      "type": "text",
+      "id": "emphasis",
+      "label": "Heading emphasis",
+      "default": "Designed to become essential."
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Text",
+      "info": "Used when the product description has no supporting paragraph.",
+      "default": "A formula should earn its place in the day, then quietly stay there."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ]
+    }
+  ]
+}
+{% endschema %}

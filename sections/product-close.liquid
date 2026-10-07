@@ -1,0 +1,75 @@
+{%- liquid
+  assign cta_url = section.settings.link
+  if cta_url == blank
+    if pages.shop != blank
+      assign cta_url = pages.shop.url
+    else
+      assign cta_url = routes.all_products_collection_url
+    endif
+  endif
+-%}
+
+<section class="pp-close full-width" data-pp-reveal>
+  <div class="pp-close__inner">
+    {%- if section.settings.heading != blank or section.settings.emphasis != blank -%}
+      <h2 class="pp-close__heading" data-pp-item>
+        {%- if section.settings.heading != blank -%}
+          {{ section.settings.heading | escape }}
+        {%- endif -%}
+        {%- if section.settings.emphasis != blank -%}
+          <span>{{ section.settings.emphasis | escape }}</span>
+        {%- endif -%}
+      </h2>
+    {%- endif -%}
+    {%- if section.settings.copy != blank -%}
+      <p class="pp-close__copy" data-pp-item>{{ section.settings.copy | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.button != blank -%}
+      <a class="pp-close__link" href="{{ cta_url }}" data-pp-item>
+        {{ section.settings.button | escape }}
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product close",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your skin,"
+    },
+    {
+      "type": "text",
+      "id": "emphasis",
+      "label": "Heading emphasis",
+      "default": "beautifully considered."
+    },
+    {
+      "type": "textarea",
+      "id": "copy",
+      "label": "Text",
+      "default": "Discover the ritual behind Lūmen."
+    },
+    {
+      "type": "text",
+      "id": "button",
+      "label": "Button label",
+      "default": "Shop all"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link",
+      "info": "Leave empty to open the Shop page."
+    }
+  ]
+}
+{% endschema %}

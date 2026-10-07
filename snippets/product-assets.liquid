@@ -1,0 +1,15 @@
+{% comment %}
+  Product page styles and behavior. Loaded from the main product section.
+{% endcomment %}
+{{ 'product-page.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-card.js' | asset_url }}" defer></script>
+<script src="{{ 'product-page.js' | asset_url }}" defer></script>
+<script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.documentElement.classList.add('pp-motion');
+    window.setTimeout(function () {
+      if (!window.LumenProductPage) document.documentElement.classList.remove('pp-motion');
+    }, 1600);
+  })();
+</script>

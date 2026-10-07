@@ -1,0 +1,70 @@
+{%- assign has_keys = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.settings.title != blank -%}
+    {%- assign has_keys = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if has_keys -%}
+  <section class="pp-band pp-band--keys full-width" data-pp-reveal>
+    <div class="pp-band__inner">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="pp-heading pp-heading--small">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      <ul class="pp-keys">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.title != blank -%}
+            <li class="pp-key" data-pp-item {{ block.shopify_attributes }}>
+              <div class="pp-key__top">
+                <h3 class="pp-key__title">{{ block.settings.title | escape }}</h3>
+                <span class="pp-key__arrow" aria-hidden="true">&rarr;</span>
+              </div>
+              <span class="pp-key__rule" aria-hidden="true"></span>
+              {%- if block.settings.text != blank -%}
+                <p class="pp-key__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Key benefits",
+  "tag": "div",
+  "class": "section-product",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Care, without the noise."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "key",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Ritual"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "A step that belongs in the day you already have."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4
+}
+{% endschema %}

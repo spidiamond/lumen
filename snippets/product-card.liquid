@@ -75,13 +75,13 @@
     <p class="product-card__price">
       {%- if product.compare_at_price > product.price -%}
         <span class="visually-hidden">Sale price</span>
-        <span class="product-card__price-current product-card__price-current--sale">{{ product.price | money }}</span>
+        <span class="product-card__price-current product-card__price-current--sale" data-shop-cents="{{ product.price }}">{{ product.price | money }}</span>
         <span class="visually-hidden">Regular price</span>
-        <s class="product-card__price-compare">{{ product.compare_at_price | money }}</s>
+        <s class="product-card__price-compare" data-shop-cents="{{ product.compare_at_price }}">{{ product.compare_at_price | money }}</s>
       {%- else -%}
         <span class="product-card__price-current">
           {%- if product.price_varies -%}From {% endif -%}
-          {{ product.price | money }}
+          <span data-shop-cents="{{ product.price }}">{{ product.price | money }}</span>
         </span>
       {%- endif -%}
     </p>
