@@ -1,155 +1,202 @@
-# Lūmen
+# Lūmen — Luxury Skincare Shopify Store
 
-A minimal, carefully structured Shopify theme designed to help you quickly get started. Designed with modularity, maintainability, and Shopify's best practices in mind.
+> A premium, editorial storefront for a modern skincare brand. Refined visual storytelling, quiet motion, and a shopping flow that stays out of the way.
 
 <p align="center">
-  <a href="./LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
-  <a href="./actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Shopify/skeleton-theme/actions/workflows/ci.yml/badge.svg"></a>
+  <img src="screenshots/lumen-homepage.png" alt="Lūmen homepage, with the full-screen hero and wordmark" width="100%">
 </p>
 
-## Getting started
+<p align="center">
+  <a href="https://github.com/spidiamond/lumen"><img src="https://img.shields.io/badge/source-GitHub-161616" alt="Source on GitHub"></a>
+  <a href="./LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-6d645b" alt="MIT license"></a>
+</p>
 
-### Prerequisites
+---
 
-Before starting, ensure you have the latest Shopify CLI installed:
+## Overview
 
-- [Shopify CLI](https://shopify.dev/docs/api/shopify-cli) – helps you download, upload, preview themes, and streamline your workflows
+**Lūmen** is a concept luxury skincare brand, built to show a high-end Shopify storefront that still feels easy to shop.
 
-If you use VS Code:
+The store pairs a minimal editorial look with a complete purchase path: product discovery, a custom product page, an Ajax cart drawer, and pages for the brand and for getting in touch. It was designed and developed on Shopify’s native theme architecture, with custom Liquid, CSS, and JavaScript. No extra framework sits between the theme and the storefront.
 
-- [Shopify Liquid VS Code Extension](https://shopify.dev/docs/storefronts/themes/tools/shopify-liquid-vscode) – provides syntax highlighting, linting, inline documentation, and auto-completion specifically designed for Liquid templates
+---
 
-### Clone
+## Preview
 
-Clone this repository using Git or Shopify CLI:
+**Store:** [wgj454-ng.myshopify.com](https://wgj454-ng.myshopify.com)
 
-```bash
-git clone git@github.com:Shopify/skeleton-theme.git
-# or
-shopify theme init
-```
+**Source:** [github.com/spidiamond/lumen](https://github.com/spidiamond/lumen)
 
-### Preview
-
-Preview this theme using Shopify CLI:
+Preview the theme locally with the Shopify CLI:
 
 ```bash
+git clone https://github.com/spidiamond/lumen.git
+cd lumen
 shopify theme dev
 ```
 
-## Theme architecture
+---
 
-```bash
-.
-├── assets          # Stores static assets (CSS, JS, images, fonts, etc.)
-├── blocks          # Reusable, nestable, customizable UI components
-├── config          # Global theme settings and customization options
-├── layout          # Top-level wrappers for pages (layout templates)
-├── locales         # Translation files for theme internationalization
-├── sections        # Modular full-width page components
-├── snippets        # Reusable Liquid code or HTML fragments
-└── templates       # Templates combining sections to define page structures
+## The storefront
+
+<p align="center">
+  <img src="screenshots/lumen-shop.png" alt="Shop page, with the editorial banner and product grid" width="49%">
+  <img src="screenshots/lumen-product.png" alt="Product page, with the gallery and purchase column" width="49%">
+</p>
+
+<p align="center">
+  <img src="screenshots/lumen-about.png" alt="About page, with the brand story and photography" width="49%">
+  <img src="screenshots/lumen-cart.png" alt="Cart drawer, titled Your ritual" width="49%">
+</p>
+
+### Visual experience
+
+- Editorial luxury skincare aesthetic
+- Full-screen homepage hero
+- Custom product hover interactions
+- Smooth scrolling with a short, natural momentum nudge
+- Subtle magnetic settling onto nearby sections
+- Scroll-based reveal animations
+- Before / after skin comparison slider
+- Quiet microinteractions
+- Responsive image treatment
+- Custom back-to-top control with a scroll-progress ring
+
+### Shopping
+
+- Custom product grid
+- Product image hover states
+- Custom product pages
+- Variant-aware product details
+- Ajax add to cart
+- Custom cart drawer
+- Quantity controls and remove
+- Empty cart state
+- Cart count that stays in sync
+- Layouts that hold together on small screens
+
+### Pages
+
+Home, Shop, Product, About, Contact, and Cart.
+
+---
+
+## Design direction
+
+Lūmen stays restrained on purpose.
+
+**Minimal.** Clean layouts and intentional space.
+
+**Editorial.** Large imagery, careful type, and a clear hierarchy.
+
+**Soft luxury.** Motion supports the page. It does not take it over.
+
+**Easy to buy.** Product discovery, the product page, and checkout stay obvious.
+
+The aim is a store that feels considered, and still simple to use.
+
+---
+
+## Tech stack
+
+| Technology | Role |
+| --- | --- |
+| Shopify Liquid | Theme structure and store data |
+| HTML | Semantic page structure |
+| CSS | Layout, responsive design, and motion |
+| JavaScript | Interaction and cart behavior |
+| Shopify Ajax API | Cart updates without a full reload |
+| Shopify theme architecture | Layout, templates, sections, and snippets |
+| Shopify localization | Locale, routes, and money formatting |
+
+The theme stays on Shopify’s own structure. There is no added application framework.
+
+---
+
+## Custom experience
+
+### Smooth scrolling
+
+Wheel scrolling keeps the browser’s native movement, then adds a very short momentum nudge. Trackpads and touch keep their own inertia. The page never takes over the scroll.
+
+### Magnetic section settling
+
+After scrolling has actually stopped, a nearby major section can ease into a cleaner resting position. Tall sections sit just below the header. Shorter ones are framed in the space that remains. If you stop between sections, the page stays where you left it.
+
+### Product interactions
+
+Product cards respond to a real pointer with a quiet image shift. Touch devices keep the product usable without a hover state.
+
+### Before / after comparison
+
+The homepage comparison is a slider. Dragging it compares the two images and does not trigger the page’s scroll settle.
+
+### Cart drawer
+
+Adding a product opens a confirmation, then **Your ritual**, a drawer on the right. From there a customer can review the cart, change quantities, remove a line, keep shopping, or go to checkout without leaving the page first.
+
+---
+
+## Performance and accessibility
+
+### Performance
+
+- Small, page-specific scripts
+- Passive scroll listeners and a single animation loop
+- Responsive Shopify image sizes
+- Lazy loading below the fold
+- Eager loading for the hero and the shop banner
+- Motion built from transform and opacity where it matters
+
+### Accessibility
+
+- Semantic landmarks and headings
+- Keyboard access for menus, the cart drawer, and currency controls
+- Visible focus
+- Labels on icon buttons
+- Reduced-motion support
+- Touch targets that stay usable on a phone
+- Native Shopify contact and newsletter forms
+
+---
+
+## Responsive design
+
+The composition is editorial on a large screen and stacks cleanly on a small one. Hover effects are limited to fine pointers. Touch uses tap.
+
+### Desktop
+
+<p align="center">
+  <img src="screenshots/lumen-desktop.png" alt="Lūmen on a desktop viewport" width="100%">
+</p>
+
+### Mobile
+
+<p align="center">
+  <img src="screenshots/lumen-mobile.png" alt="Lūmen on a mobile viewport" width="420">
+</p>
+
+Checked across phone, tablet, laptop, and wide desktop widths.
+
+---
+
+## Project structure
+
+```text
+├── assets/        Styles, scripts, and media
+├── config/        Theme settings
+├── layout/        Document wrappers
+├── locales/       Theme translations
+├── screenshots/   README previews
+├── sections/      Page sections
+├── snippets/      Shared Liquid
+├── src/           Tailwind source for utilities.css
+├── templates/     JSON page templates
+└── README.md
 ```
 
-To learn more, refer to the [theme architecture documentation](https://shopify.dev/docs/storefronts/themes/architecture).
-
-### Templates
-
-[Templates](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) control what's rendered on each type of page in a theme.
-
-The Skeleton Theme scaffolds [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their store.
-
-None of the template types are required, and not all of them are included in the Skeleton Theme. Refer to the [template types reference](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) for a full list.
-
-### Sections
-
-[Sections](https://shopify.dev/docs/storefronts/themes/architecture/sections) are Liquid files that allow you to create reusable modules of content that can be customized by merchants. They can also include blocks which allow merchants to add, remove, and reorder content within a section.
-
-Sections are made customizable by including a `{% schema %}` in the body. For more information, refer to the [section schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/sections/section-schema).
-
-### Blocks
-
-[Blocks](https://shopify.dev/docs/storefronts/themes/architecture/blocks) let developers create flexible layouts by breaking down sections into smaller, reusable pieces of Liquid. Each block has its own set of settings, and can be added, removed, and reordered within a section.
-
-Blocks are made customizable by including a `{% schema %}` in the body. For more information, refer to the [block schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/blocks/theme-blocks/schema).
-
-## Schemas
-
-When developing components defined by schema settings, we recommend these guidelines to simplify your code:
-
-- **Single property settings**: For settings that correspond to a single CSS property, use CSS variables:
-
-  ```liquid
-  <div class="collection" style="--gap: {{ block.settings.gap }}px">
-    ...
-  </div>
-
-  {% stylesheet %}
-    .collection {
-      gap: var(--gap);
-    }
-  {% endstylesheet %}
-
-  {% schema %}
-  {
-    "settings": [{
-      "type": "range",
-      "label": "gap",
-      "id": "gap",
-      "min": 0,
-      "max": 100,
-      "unit": "px",
-      "default": 0,
-    }]
-  }
-  {% endschema %}
-  ```
-
-- **Multiple property settings**: For settings that control multiple CSS properties, use CSS classes:
-
-  ```liquid
-  <div class="collection {{ block.settings.layout }}">
-    ...
-  </div>
-
-  {% stylesheet %}
-    .collection--full-width {
-      /* multiple styles */
-    }
-    .collection--narrow {
-      /* multiple styles */
-    }
-  {% endstylesheet %}
-
-  {% schema %}
-  {
-    "settings": [{
-      "type": "select",
-      "id": "layout",
-      "label": "layout",
-      "values": [
-        { "value": "collection--full-width", "label": "t:options.full" },
-        { "value": "collection--narrow", "label": "t:options.narrow" }
-      ]
-    }]
-  }
-  {% endschema %}
-  ```
-
-## CSS & JavaScript
-
-For CSS and JavaScript, we recommend using the [`{% stylesheet %}`](https://shopify.dev/docs/api/liquid/tags#stylesheet) and [`{% javascript %}`](https://shopify.dev/docs/api/liquid/tags/javascript) tags. They can be included multiple times, but the code will only appear once.
-
-### `critical.css`
-
-The Skeleton Theme explicitly separates essential CSS necessary for every page into a dedicated `critical.css` file.
-
-## Contributing
-
-We're excited for your contributions to the Skeleton Theme! This repository aims to remain as lean, lightweight, and fundamental as possible, and we kindly ask your contributions to align with this intention.
-
-Visit our [CONTRIBUTING.md](./CONTRIBUTING.md) for a detailed overview of our process, guidelines, and recommendations.
+---
 
 ## License
 
-Skeleton Theme is open-sourced under the [MIT](./LICENSE.md) License.
+Released under the [MIT](./LICENSE.md) license.
