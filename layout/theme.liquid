@@ -29,7 +29,7 @@
     {{ content_for_header }}
   </head>
 
-  <body class="template-{{ template.name }}">
+  <body id="top" class="template-{{ template.name }}">
     <a class="skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
 
     {% sections 'header-group' %}

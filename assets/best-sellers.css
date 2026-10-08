@@ -9,6 +9,7 @@
 }
 
 .best-sellers {
+  scroll-margin-top: var(--header-height, 76px);
   --bs-ink: var(--header-ink, #161616);
   --bs-muted: #6d645b;
   --bs-line: rgb(22 22 22 / 0.14);

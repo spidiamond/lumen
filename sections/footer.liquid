@@ -122,11 +122,21 @@
         <ul class="site-footer__list" role="list">
           {%- if section.settings.shop_menu.links.size > 0 -%}
             {%- for link in section.settings.shop_menu.links -%}
+              {%- liquid
+                assign footer_href = link.url
+                assign footer_label = link.title | downcase | strip
+                if footer_label == 'best sellers' or link.url contains 'sort_by=best-selling' or link.url contains '/collections/best-sellers'
+                  assign footer_href = routes.root_url | append: '#best-sellers'
+                endif
+                if footer_label == 'privacy policy' or link.url contains 'privacy-policy'
+                  assign footer_href = '#top'
+                endif
+              -%}
               <li>
                 <a
                   class="site-footer__link"
-                  href="{{ link.url }}"
-                  {% if link.current %}
+                  href="{{ footer_href }}"
+                  {% if link.current and footer_href == link.url %}
                     aria-current="page"
                   {% endif %}
                 >
@@ -137,10 +147,7 @@
           {%- else -%}
             {%- liquid
               assign all_url = routes.all_products_collection_url
-              assign best_url = collections['best-sellers'].url | default: all_url
-              if collections['best-sellers'].id == blank
-                assign best_url = all_url | append: '?sort_by=best-selling'
-              endif
+              assign best_url = routes.root_url | append: '#best-sellers'
               assign new_url = collections['new-arrivals'].url
               if collections['new-arrivals'].id == blank
                 assign new_url = all_url | append: '?sort_by=created-descending'
@@ -164,11 +171,21 @@
         <ul class="site-footer__list" role="list">
           {%- if section.settings.help_menu.links.size > 0 -%}
             {%- for link in section.settings.help_menu.links -%}
+              {%- liquid
+                assign footer_href = link.url
+                assign footer_label = link.title | downcase | strip
+                if footer_label == 'best sellers' or link.url contains 'sort_by=best-selling' or link.url contains '/collections/best-sellers'
+                  assign footer_href = routes.root_url | append: '#best-sellers'
+                endif
+                if footer_label == 'privacy policy' or link.url contains 'privacy-policy'
+                  assign footer_href = '#top'
+                endif
+              -%}
               <li>
                 <a
                   class="site-footer__link"
-                  href="{{ link.url }}"
-                  {% if link.current %}
+                  href="{{ footer_href }}"
+                  {% if link.current and footer_href == link.url %}
                     aria-current="page"
                   {% endif %}
                 >
@@ -196,7 +213,7 @@
               {% render 'footer-link', url: shop.refund_policy.url, title: shop.refund_policy.title %}
             {%- endif -%}
             {%- if shop.privacy_policy != blank -%}
-              {% render 'footer-link', url: shop.privacy_policy.url, title: shop.privacy_policy.title %}
+              {% render 'footer-link', url: '#top', title: shop.privacy_policy.title %}
             {%- endif -%}
             {%- if shop.terms_of_service != blank -%}
               {% render 'footer-link', url: shop.terms_of_service.url, title: shop.terms_of_service.title %}
