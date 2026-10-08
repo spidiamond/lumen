@@ -62,35 +62,99 @@
     });
   }
 
-  function closeMenu() {
-    var menu = document.querySelector('[data-currency-menu]');
-    var toggle = document.querySelector('[data-currency-toggle]');
-    if (menu) menu.hidden = true;
-    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  function setOpen(root, open) {
+    var toggle = root.querySelector('[data-currency-toggle]');
+    var menu = root.querySelector('[data-currency-menu]');
+    root.classList.toggle('is-open', open);
+    if (toggle) toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (menu) {
+      menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+      menu.inert = !open;
+    }
+  }
+
+  function closeMenus() {
+    document.querySelectorAll('[data-currency].is-open').forEach(function (root) {
+      setOpen(root, false);
+    });
+  }
+
+  function bindMenu(root) {
+    if (!root || root.getAttribute('data-currency-bound') === 'true') return;
+    var toggle = root.querySelector('[data-currency-toggle]');
+    var menu = root.querySelector('[data-currency-menu]');
+    if (!toggle || !menu) return;
+    root.setAttribute('data-currency-bound', 'true');
+    menu.inert = true;
+
+    var closeTimer = 0;
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+    function cancelClose() {
+      window.clearTimeout(closeTimer);
+    }
+
+    function scheduleClose() {
+      cancelClose();
+      closeTimer = window.setTimeout(function () {
+        setOpen(root, false);
+      }, 90);
+    }
+
+    root.addEventListener('mouseenter', function () {
+      if (!finePointer.matches) return;
+      cancelClose();
+      setOpen(root, true);
+    });
+
+    root.addEventListener('mouseleave', function () {
+      if (!finePointer.matches) return;
+      scheduleClose();
+    });
+
+    root.addEventListener('focusin', function () {
+      cancelClose();
+      setOpen(root, true);
+    });
+
+    root.addEventListener('focusout', function (event) {
+      if (root.contains(event.relatedTarget)) return;
+      scheduleClose();
+    });
+
+    toggle.addEventListener('click', function () {
+      if (finePointer.matches) return;
+      setOpen(root, !root.classList.contains('is-open'));
+    });
+  }
+
+  function bindMenus(scope) {
+    var root = scope && scope.querySelectorAll ? scope : document;
+    root.querySelectorAll('[data-currency]').forEach(bindMenu);
   }
 
   function reflect(code) {
-    var label = document.querySelector('.site-header__currency-label');
-    var toggle = document.querySelector('[data-currency-toggle]');
-    if (label) label.textContent = code;
-    if (toggle) toggle.setAttribute('aria-label', 'Currency, ' + code);
+    document.querySelectorAll('[data-currency-label]').forEach(function (label) {
+      label.textContent = code;
+    });
+    document.querySelectorAll('[data-currency-toggle]').forEach(function (toggle) {
+      toggle.setAttribute('aria-label', 'Currency, ' + code);
+    });
     document.querySelectorAll('[data-currency-code]').forEach(function (button) {
       button.setAttribute('aria-selected', button.getAttribute('data-currency-code') === code ? 'true' : 'false');
     });
-    var select = document.querySelector('[data-footer-country]');
-    if (select && select.value !== code) select.value = code;
     copyFlag(code);
   }
 
   function set(code) {
     if (codes.indexOf(code) === -1 || code === active()) {
-      closeMenu();
+      closeMenus();
       return;
     }
     document.cookie = 'lumen_currency=' + encodeURIComponent(code) + ';path=/;max-age=31536000;SameSite=Lax';
     reflect(code);
     paint();
-    closeMenu();
+    closeMenus();
     document.dispatchEvent(new CustomEvent('lumen:currency', { detail: { currency: code } }));
   }
 
@@ -101,12 +165,14 @@
     set(button.getAttribute('data-currency-code'));
   });
 
-  var select = document.querySelector('[data-footer-country]');
-  if (select) {
-    select.addEventListener('change', function () {
-      set(select.value);
-    });
-  }
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeMenus();
+  });
+
+  bindMenus(document);
+  document.addEventListener('shopify:section:load', function (event) {
+    bindMenus(event.target);
+  });
 
   reflect(active());
   paint();

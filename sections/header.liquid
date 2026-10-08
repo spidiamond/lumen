@@ -128,13 +128,13 @@
             aria-label="Currency, {{ active_currency }}"
           >
             <span data-currency-flag>{% render 'currency-flag', code: active_flag %}</span>
-            <span class="site-header__currency-label">{{ active_currency }}</span>
+            <span class="site-header__currency-label" data-currency-label>{{ active_currency }}</span>
             <svg class="site-header__chevron" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 4.5 6 8l3.5-3.5"/>
             </svg>
           </button>
 
-          <ul class="site-header__currency-menu" data-currency-menu role="listbox" hidden>
+          <ul class="site-header__currency-menu" data-currency-menu role="listbox" aria-hidden="true">
             {%- for currency_code in popular_currencies -%}
               {%- assign country_code = currency_countries[forloop.index0] -%}
               <li>
@@ -180,32 +180,6 @@
 </header>
 
 <script>
-  (function () {
-    var root = document.querySelector('[data-currency]');
-    if (!root) return;
-
-    var toggle = root.querySelector('[data-currency-toggle]');
-    var menu = root.querySelector('[data-currency-menu]');
-    if (!toggle || !menu) return;
-
-    function setOpen(open) {
-      menu.hidden = !open;
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-
-    toggle.addEventListener('click', function () {
-      setOpen(menu.hidden);
-    });
-
-    document.addEventListener('click', function (event) {
-      if (!root.contains(event.target)) setOpen(false);
-    });
-
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') setOpen(false);
-    });
-  })();
-
   (function () {
     var header = document.querySelector('[data-site-header]');
     var toggle = header && header.querySelector('[data-menu-toggle]');

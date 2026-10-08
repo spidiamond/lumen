@@ -76,26 +76,43 @@
         {%- endif -%}
 
         {%- if show_localization -%}
-          <div class="site-footer__localization">
-            <label class="site-footer__visually-hidden" for="{{ country_id }}">Currency</label>
-            <div class="site-footer__select">
+          <div class="site-footer__currency" data-currency>
+            <button
+              class="site-footer__currency-toggle"
+              id="{{ country_id }}"
+              type="button"
+              data-currency-toggle
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Currency, {{ active_currency }}"
+            >
               <span data-currency-flag>{% render 'currency-flag', code: active_flag %}</span>
-              <select id="{{ country_id }}" data-footer-country>
-                {%- for currency_code in currency_codes -%}
-                  <option
-                    value="{{ currency_code }}"
-                    {% if currency_code == active_currency %}
-                      selected
-                    {% endif %}
-                  >
-                    {{- currency_code -}}
-                  </option>
-                {%- endfor -%}
-              </select>
-              <svg class="site-footer__select-chevron" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
+              <span class="site-footer__currency-label" data-currency-label>{{ active_currency }}</span>
+              <svg class="site-footer__chevron" viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 4.5 6 8l3.5-3.5"/>
               </svg>
-            </div>
+            </button>
+            <ul class="site-footer__currency-menu" data-currency-menu role="listbox" aria-hidden="true">
+              {%- for currency_code in currency_codes -%}
+                {%- assign country_code = currency_countries[forloop.index0] -%}
+                <li>
+                  <button
+                    class="site-footer__currency-option"
+                    type="button"
+                    data-currency-code="{{ currency_code }}"
+                    role="option"
+                    {% if currency_code == active_currency %}
+                      aria-selected="true"
+                    {% else %}
+                      aria-selected="false"
+                    {% endif %}
+                  >
+                    {% render 'currency-flag', code: country_code %}
+                    <span>{{ currency_code }}</span>
+                  </button>
+                </li>
+              {%- endfor -%}
+            </ul>
           </div>
         {%- endif -%}
       </div>

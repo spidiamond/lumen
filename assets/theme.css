@@ -179,16 +179,31 @@ body {
 .site-header__chevron {
   width: 12px;
   height: 12px;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.site-header__currency-form {
+.site-header__currency-form,
+.site-header__currency {
   position: relative;
+}
+
+.site-header__currency::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 9.5rem;
+  height: 16px;
 }
 
 .site-header__currency-toggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+.site-header__currency.is-open .site-header__chevron {
+  transform: rotate(180deg);
 }
 
 .site-header__currency-menu {
@@ -204,10 +219,25 @@ body {
   color: #161616;
   border-radius: 12px;
   box-shadow: 0 14px 36px rgb(22 22 22 / 0.14);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 220ms;
 }
 
-.site-header__currency-menu[hidden] {
-  display: none;
+.site-header__currency.is-open .site-header__currency-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition:
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s;
 }
 
 .site-header__currency-option {
@@ -646,6 +676,10 @@ body:not(.template-index) .logo-flight {
 
   .site-header__menu-line,
   .site-header--menu-open .site-header__menu-line,
+  .site-header__chevron,
+  .site-header__currency.is-open .site-header__chevron,
+  .site-header__currency-menu,
+  .site-header__currency.is-open .site-header__currency-menu,
   .site-menu,
   .site-header--menu-open .site-menu,
   .site-menu__item,

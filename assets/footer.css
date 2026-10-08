@@ -166,75 +166,121 @@
 
 /* Country / currency */
 
-.site-footer__localization {
+.site-footer__currency {
+  position: relative;
+  display: inline-block;
   margin-top: 20px;
+  max-width: 100%;
 }
 
-.site-footer__select {
-  position: relative;
+.site-footer__currency::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 9.5rem;
+  height: 12px;
+}
+
+.site-footer__currency.is-open {
+  z-index: 4;
+}
+
+.site-footer__currency-toggle {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   max-width: 100%;
-  color: var(--sf-ink);
-}
-
-.site-footer__select .site-header__flag {
-  position: absolute;
-  left: 10px;
-  width: 16px;
-  height: 11px;
-  border-radius: 1px;
-  pointer-events: none;
-}
-
-.site-footer__select select {
-  appearance: none;
-  max-width: 100%;
-  padding: 7px 28px 7px 10px;
+  padding: 7px 10px;
   border: 0;
   border-radius: 2px;
   background: #2b2b2b;
   color: inherit;
   font-family: var(--font-primary--family);
   font-size: 12px;
-  text-overflow: ellipsis;
+  letter-spacing: 0.04em;
+  line-height: 1;
   cursor: pointer;
-  transition: background-color 280ms ease;
+  transition: background-color 280ms var(--sf-ease);
 }
 
-.site-footer__select .site-header__flag ~ select,
-.site-footer__select [data-currency-flag] ~ select {
-  padding-left: 34px;
+.site-footer__currency-toggle:hover,
+.site-footer__currency.is-open .site-footer__currency-toggle {
+  background: #333;
 }
 
-.site-footer__select select:hover {
-  background-color: #333;
+.site-footer__currency .site-header__flag {
+  width: 16px;
+  height: 11px;
+  border-radius: 1px;
 }
 
-.site-footer__select select:focus-visible {
-  outline-offset: 2px;
-}
-
-.site-footer__select option {
-  background-color: var(--sf-bg);
-  color: var(--sf-ink);
-}
-
-.site-footer__select-chevron {
-  position: absolute;
-  right: 10px;
+.site-footer__chevron {
   width: 10px;
   height: 10px;
-  pointer-events: none;
+  display: block;
+  transition: transform 280ms var(--sf-ease);
 }
 
-.site-footer__localization-submit {
-  margin-top: 8px;
-  padding: 6px 12px;
-  border: 1px solid var(--sf-line-strong);
-  background: transparent;
+.site-footer__currency.is-open .site-footer__chevron {
+  transform: rotate(180deg);
+}
+
+.site-footer__currency-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 3;
+  min-width: 9.5rem;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #2b2b2b;
   color: var(--sf-ink);
-  font: 12px var(--font-primary--family);
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  box-shadow: 0 16px 36px rgb(0 0 0 / 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 220ms var(--sf-ease),
+    transform 220ms var(--sf-ease),
+    visibility 0s linear 220ms;
+}
+
+.site-footer__currency.is-open .site-footer__currency-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition:
+    opacity 220ms var(--sf-ease),
+    transform 220ms var(--sf-ease),
+    visibility 0s;
+}
+
+.site-footer__currency-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-primary--family);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.site-footer__currency-option:hover,
+.site-footer__currency-option[aria-selected='true'] {
+  background: #3a3a3a;
 }
 
 /* Newsletter */
@@ -517,7 +563,11 @@
   .site-footer__submit,
   .site-footer__submit svg,
   .site-footer__social,
-  .site-footer__select select {
+  .site-footer__currency-toggle,
+  .site-footer__chevron,
+  .site-footer__currency.is-open .site-footer__chevron,
+  .site-footer__currency-menu,
+  .site-footer__currency.is-open .site-footer__currency-menu {
     transition-duration: 1ms;
   }
 
