@@ -133,6 +133,7 @@ body {
 .site-header__currency-toggle,
 .site-header__icon-button {
   color: inherit;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
   font-family: var(--nav-font);
   font-size: 15px;
   font-weight: 400;
@@ -273,6 +274,7 @@ body {
   display: block;
   width: var(--logo-end-width);
   line-height: 0;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .site-header__logo {
@@ -674,6 +676,10 @@ body:not(.template-index) .logo-flight {
     will-change: auto;
   }
 
+  .site-header__link,
+  .site-header__icon-button,
+  .site-header__currency-toggle,
+  .site-header__logo-slot,
   .site-header__menu-line,
   .site-header--menu-open .site-header__menu-line,
   .site-header__chevron,

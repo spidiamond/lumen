@@ -411,6 +411,7 @@
 
 .pp-qty__btn {
   cursor: pointer;
+  transition: background-color 280ms var(--pp-ease);
 }
 
 .pp-qty__btn:hover {
@@ -472,6 +473,7 @@
 
 .pp-add__text span {
   grid-area: 1 / 1;
+  transition: opacity 280ms var(--pp-ease);
 }
 
 .pp-add [data-pp-add-state] {
@@ -525,6 +527,7 @@
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  transition: background-color 420ms var(--pp-ease), color 420ms var(--pp-ease);
 }
 
 .pp-checkout .shopify-payment-button__button--unbranded:hover {
@@ -1314,24 +1317,44 @@
   right: 14px;
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: rgb(255 252 248 / 0.88);
+  background: rgb(255 252 248 / 0.92);
   color: var(--pp-ink);
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: background 360ms var(--pp-ease), color 360ms var(--pp-ease), transform 360ms var(--pp-ease);
+  box-shadow: 0 8px 20px rgb(22 22 22 / 0.08);
+  backdrop-filter: blur(10px);
+  transition: background 420ms var(--pp-ease), color 420ms var(--pp-ease), transform 420ms var(--pp-ease);
+}
+
+.pp-wish::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .pp-wish svg {
   width: 16px;
   height: 16px;
-  fill: none;
+  fill: transparent;
   stroke: currentColor;
-  stroke-width: 1.4;
+  stroke-width: 1.35;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  transform: scale(1);
+  transition: transform 520ms var(--pp-ease), fill 420ms var(--pp-ease);
+}
+
+.pp-wish[aria-pressed="true"] {
+  color: var(--pp-ink);
+  background: #fff;
 }
 
 .pp-wish[aria-pressed="true"] svg {
@@ -1339,7 +1362,40 @@
 }
 
 .pp-wish:hover {
-  transform: scale(1.04);
+  transform: scale(1.06);
+}
+
+.pp-wish:active {
+  transform: scale(0.94);
+}
+
+.pp-wish.is-pop svg {
+  animation: pp-heart 680ms var(--pp-ease);
+}
+
+.pp-wish.is-pop::after {
+  animation: pp-heart-ring 720ms var(--pp-ease);
+}
+
+.pp-wish.is-release svg {
+  animation: pp-heart-out 420ms var(--pp-ease);
+}
+
+@keyframes pp-heart {
+  0% { transform: scale(0.7); }
+  42% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pp-heart-out {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.82); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pp-heart-ring {
+  0% { opacity: 0.4; transform: scale(0.86); }
+  100% { opacity: 0; transform: scale(1.7); }
 }
 
 @media (min-width: 1000px) {
@@ -1803,6 +1859,9 @@ html.pp-motion .pp-bar {
   .pp-step__frame,
   .pp-add,
   .pp-add::before,
+  .pp-add__text span,
+  .pp-qty__btn,
+  .pp-checkout .shopify-payment-button__button--unbranded,
   .pp-kicker,
   .pp-title,
   .pp-price,
@@ -1812,6 +1871,9 @@ html.pp-motion .pp-bar {
   .pp-form,
   .pp-enlarge,
   .pp-enlarge::after,
+  .pp-wish,
+  .pp-wish::after,
+  .pp-wish svg,
   .pp-viewer,
   .pp-viewer::backdrop,
   .pp-viewer__figure img {

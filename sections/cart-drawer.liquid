@@ -96,8 +96,8 @@
     </div>
   </dialog>
 
-  <div class="cart-toast" data-cart-toast hidden>
-    <p class="cart-toast__kicker">Added to your ritual</p>
+  <div class="cart-toast" data-cart-toast data-toast-tab="cart" hidden>
+    <p class="cart-toast__kicker" data-cart-toast-kicker>Added to your ritual</p>
     <div class="cart-toast__row">
       <img class="cart-toast__img" alt="" data-cart-toast-img width="64" height="64" hidden>
       <div>
@@ -109,6 +109,7 @@
       <button class="cart-toast__view" type="button" data-cart-toast-view>View cart</button>
       <button class="cart-toast__dismiss" type="button" data-cart-toast-dismiss>Continue shopping</button>
     </div>
+    <span class="cart-toast__life" aria-hidden="true"></span>
   </div>
   <p class="visually-hidden" role="status" data-cart-status></p>
 </div>

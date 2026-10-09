@@ -37,28 +37,27 @@
 .cart-toast {
   position: fixed;
   z-index: 55;
-  top: calc(var(--header-height, 76px) + 12px);
-  right: max(16px, env(safe-area-inset-right));
-  width: min(320px, calc(100vw - 32px));
-  padding: 16px 16px 14px;
-  border: 1px solid var(--cart-line);
+  top: calc(var(--header-height, 76px) + 16px);
+  right: max(18px, env(safe-area-inset-right));
+  width: min(340px, calc(100vw - 32px));
+  padding: 18px 18px 16px;
+  border: 1px solid rgb(22 22 22 / 0.08);
   background: var(--cart-paper);
   color: var(--cart-ink);
+  box-shadow: 0 16px 40px rgb(28 22 18 / 0.08);
   opacity: 0;
-  transform: translateY(-8px) scale(0.98);
-  filter: blur(6px);
+  transform: translateY(14px);
   pointer-events: none;
+  overflow: hidden;
+  transition:
+    opacity 640ms var(--cart-ease),
+    transform 720ms var(--cart-ease);
 }
 
 .cart-toast.is-in {
   opacity: 1;
   transform: none;
-  filter: none;
   pointer-events: auto;
-  transition:
-    opacity 520ms var(--cart-ease),
-    transform 520ms var(--cart-ease),
-    filter 520ms var(--cart-ease);
 }
 
 .cart-toast__kicker {
@@ -120,6 +119,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: opacity 320ms var(--cart-ease);
 }
 
 .cart-toast__view {
@@ -132,6 +132,22 @@
 
 .cart-toast__dismiss {
   color: var(--cart-muted);
+}
+
+.cart-toast__life {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: rgb(22 22 22 / 0.28);
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.cart-toast.is-in .cart-toast__life {
+  transform: scaleX(0);
+  transition: transform 4200ms linear;
 }
 
 /* -------------------------------------------------------------- Drawer */
@@ -222,7 +238,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: color 320ms var(--cart-ease), border-color 320ms var(--cart-ease);
+  transition: color 420ms var(--cart-ease), border-color 420ms var(--cart-ease), opacity 280ms var(--cart-ease);
 }
 
 .cart-tabs__tab.is-active {
@@ -278,10 +294,16 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: opacity 320ms var(--cart-ease), transform 360ms var(--cart-ease);
+}
+
+.cart-wish__add:active {
+  transform: translateY(1px);
 }
 
 .cart-wish__add:disabled {
   opacity: 0.45;
+  transform: none;
   cursor: not-allowed;
 }
 
@@ -304,6 +326,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: opacity 320ms var(--cart-ease);
 }
 
 .cart-ship {
@@ -441,6 +464,7 @@
 .cart-line__title a {
   color: inherit;
   text-decoration: none;
+  transition: opacity 320ms var(--cart-ease);
 }
 
 .cart-line__variant,
@@ -480,6 +504,11 @@
 
 .cart-qty button {
   cursor: pointer;
+  transition: background-color 280ms var(--cart-ease);
+}
+
+.cart-qty button:active {
+  background-color: rgb(22 22 22 / 0.06);
 }
 
 .cart-qty button:disabled {
@@ -498,6 +527,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  transition: color 360ms var(--cart-ease), opacity 280ms var(--cart-ease);
 }
 
 .cart-upsell {
@@ -558,6 +588,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: opacity 320ms var(--cart-ease);
 }
 
 .cart-note {
@@ -577,6 +608,7 @@
   text-transform: uppercase;
   text-align: left;
   cursor: pointer;
+  transition: opacity 320ms var(--cart-ease);
 }
 
 .cart-note__panel {
@@ -661,6 +693,11 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: background-color 420ms var(--cart-ease), transform 420ms var(--cart-ease);
+}
+
+.cart-checkout:active {
+  transform: translateY(0);
 }
 
 .cart-checkout__arrow {
@@ -677,6 +714,7 @@
   text-align: center;
   text-transform: uppercase;
   text-decoration: none;
+  transition: opacity 320ms var(--cart-ease);
 }
 
 .cart-summary.is-changed strong {
@@ -715,6 +753,22 @@ html.cart-open {
 
   .cart-checkout:hover .cart-checkout__arrow {
     transform: translateX(5px);
+  }
+
+  .cart-drawer__close:hover,
+  .cart-note__toggle:hover,
+  .cart-summary__page:hover,
+  .cart-upsell__add:hover,
+  .cart-toast__view:hover,
+  .cart-toast__dismiss:hover,
+  .cart-line__title a:hover,
+  .cart-line__remove:hover,
+  .cart-wish__add:hover {
+    opacity: 0.62;
+  }
+
+  .cart-line__remove:hover {
+    color: var(--cart-ink);
   }
 }
 
@@ -779,6 +833,17 @@ html.cart-open {
   .cart-checkout,
   .cart-checkout__arrow,
   .cart-empty__link span,
+  .cart-qty button,
+  .cart-line__remove,
+  .cart-line__title a,
+  .cart-drawer__close,
+  .cart-note__toggle,
+  .cart-summary__page,
+  .cart-upsell__add,
+  .cart-wish__add,
+  .cart-toast__view,
+  .cart-toast__dismiss,
+  .cart-tabs__tab,
   .cart-note__panel,
   .cart-fly {
     transition: none;

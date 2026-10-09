@@ -79,10 +79,30 @@
     items.forEach(function (item, i) {
       if (String(item.id) === String(id)) index = i;
     });
+    var added = index < 0;
     if (index >= 0) items.splice(index, 1);
     else items.push({ id: Number(id), handle: handle, variantId: variantId ? Number(variantId) : null });
+    pulseHeart(button, added);
     write(items);
+    if (added) document.dispatchEvent(new CustomEvent('lumen:wishlist-added', { detail: noticeFrom(button) }));
     if (wishView && !wishView.hidden) render();
+  }
+
+  function pulseHeart(button, added) {
+    button.classList.remove('is-pop', 'is-release');
+    void button.offsetWidth;
+    button.classList.add(added ? 'is-pop' : 'is-release');
+  }
+
+  function noticeFrom(button) {
+    var page = button.closest('[data-product-page]');
+    var image = page && page.querySelector('.pp-slide.is-active img');
+    var price = page && page.querySelector('[data-pp-price]');
+    return {
+      title: button.getAttribute('data-product-title') || '',
+      image: image ? (image.currentSrc || image.src) : '',
+      price: price ? price.textContent.replace(/\s+/g, ' ').trim() : ''
+    };
   }
 
   function removeId(id) {
@@ -269,7 +289,10 @@
   });
 
   document.addEventListener('lumen:wishlist', paintHearts);
-  document.addEventListener('lumen:drawer-open', function () { showTab('cart'); });
+  document.addEventListener('lumen:drawer-open', function (event) {
+    var tab = event.detail && event.detail.tab;
+    showTab(tab === 'wish' ? 'wish' : 'cart');
+  });
 
   if (root) {
     var shop = root.querySelector('[data-wish-shop]');
