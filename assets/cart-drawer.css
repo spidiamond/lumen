@@ -207,12 +207,12 @@
 
 .cart-tabs {
   display: flex;
-  gap: 18px;
-  margin-top: 12px;
+  gap: 26px;
+  margin-top: 20px;
 }
 
 .cart-tabs__tab {
-  padding: 0 0 6px;
+  padding: 0 0 8px;
   border: 0;
   border-bottom: 1px solid transparent;
   background: none;
@@ -286,7 +286,7 @@
 }
 
 .cart-drawer__count {
-  margin: 10px 0 0;
+  margin: 18px 0 0;
   color: var(--cart-muted);
   font-family: var(--nav-font);
   font-size: 11px;
