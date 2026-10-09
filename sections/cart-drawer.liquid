@@ -26,11 +26,19 @@
       <header class="cart-drawer__head">
         <div>
           <h2 class="cart-drawer__title" id="CartDrawerTitle">Your ritual</h2>
-          <p class="cart-drawer__count" data-cart-count>0 items</p>
+          <div class="cart-tabs" role="tablist" aria-label="Cart and wishlist">
+            <button class="cart-tabs__tab is-active" type="button" role="tab" id="CartDrawerCartTab" data-drawer-tab="cart" aria-selected="true" aria-controls="CartDrawerCart">Cart</button>
+            <button class="cart-tabs__tab" type="button" role="tab" id="CartDrawerWishTab" data-drawer-tab="wish" aria-selected="false" aria-controls="CartDrawerWish" tabindex="-1">Wishlist</button>
+          </div>
+          <p class="cart-drawer__count">
+            <span data-cart-count>0 items</span>
+            <span data-wish-count hidden>0 items</span>
+          </p>
         </div>
         <button class="cart-drawer__close" type="button" data-cart-close aria-label="Close">Close</button>
       </header>
 
+      <div id="CartDrawerCart" data-drawer-cart role="tabpanel" aria-labelledby="CartDrawerCartTab">
       <div class="cart-ship" data-cart-ship hidden>
         <p data-cart-ship-copy></p>
         <div class="cart-ship__track" aria-hidden="true">
@@ -75,6 +83,16 @@
         </form>
         <a class="cart-summary__page" href="{{ routes.cart_url }}">View cart</a>
       </footer>
+      </div>
+
+      <div id="CartDrawerWish" class="cart-wish" data-drawer-wish role="tabpanel" aria-labelledby="CartDrawerWishTab" hidden>
+        <div class="cart-empty" data-wish-empty>
+          <p class="cart-empty__title">Your wishlist is waiting.</p>
+          <p class="cart-empty__copy">Save your favorite essentials here for later.</p>
+          <a class="cart-empty__link" href="{{ shop_url }}" data-wish-shop>Continue shopping <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <ul class="cart-lines cart-wish__lines" data-wish-lines hidden></ul>
+      </div>
     </div>
   </dialog>
 

@@ -297,6 +297,8 @@
         }
         setQty(qty.value);
       }
+      var wish = root.querySelector('[data-wishlist-toggle]');
+      if (wish) wish.setAttribute('data-variant-id', String(variant.id));
       if (variant.image_id) {
         slides.forEach(function (slide, index) {
           if (String(slide.getAttribute('data-image-id')) === String(variant.image_id)) setActive(index, false);

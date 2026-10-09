@@ -414,6 +414,7 @@
     if (!dialog || dialog.open) return;
     hideToast();
     closing = false;
+    document.dispatchEvent(new CustomEvent('lumen:drawer-open'));
     dialog.showModal();
     document.documentElement.classList.add('cart-open');
     var reveal = function () {

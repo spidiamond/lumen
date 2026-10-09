@@ -99,6 +99,21 @@
           <button class="pp-enlarge" type="button" data-pp-open>
             View larger
           </button>
+          <button
+            class="pp-wish"
+            type="button"
+            data-wishlist-toggle
+            data-product-id="{{ product.id }}"
+            data-product-handle="{{ product.handle | escape }}"
+            data-product-title="{{ product.title | escape }}"
+            data-variant-id="{{ current.id }}"
+            aria-pressed="false"
+            aria-label="Save {{ product.title | escape }} to wishlist"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 20.2s-6.6-4.1-9.2-8.2C1.2 9.6 2.2 6.2 5.4 5.2c1.8-.6 3.6.1 4.6 1.6 1-1.5 2.8-2.2 4.6-1.6 3.2 1 4.2 4.4 2.6 6.8-2.6 4.1-9.2 8.2-9.2 8.2z"/>
+            </svg>
+          </button>
           <p class="pp-count" {% if image_count < 2 %}hidden{% endif %}>
             <span data-pp-count>1</span>
             <span aria-hidden="true"> / {{ image_count }}</span>
@@ -317,7 +332,7 @@
 
   {%- if image_count > 0 -%}
     <dialog class="pp-viewer" data-pp-viewer aria-label="{{ product.title | escape }} images">
-      <button class="pp-viewer__close" type="button" data-pp-viewer-close aria-label="Close">Close</button>
+      <button class="pp-viewer__close" type="button" data-pp-viewer-close aria-label="Close">&times;</button>
       <button class="pp-viewer__nav pp-viewer__nav--prev" type="button" data-pp-viewer-prev aria-label="Previous image" {% if image_count < 2 %}hidden{% endif %}>&larr;</button>
       <figure class="pp-viewer__figure">
         <img alt="" data-pp-viewer-img>

@@ -10,14 +10,16 @@
 {%- endfor -%}
 
 {%- if has_blocks or auto_items != blank -%}
-  <section class="pp-band full-width" data-pp-reveal>
+  <section class="pp-band pp-band--benefits full-width" data-pp-reveal>
     <div class="pp-band__inner">
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="pp-kicker">{{ section.settings.eyebrow | escape }}</p>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h2 class="pp-heading">{{ section.settings.heading | escape }}</h2>
-      {%- endif -%}
+      <div class="pp-band__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="pp-kicker">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="pp-heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
 
       <ol class="pp-benefits">
         {%- if has_blocks -%}

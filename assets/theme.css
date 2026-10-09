@@ -693,33 +693,38 @@ body:not(.template-index) .logo-flight {
   }
 }
 
-/* Chromium ignores ::-webkit-scrollbar when scrollbar-color is set, so the standard properties are Firefox-only. */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* Track stays transparent. scrollbar-color covers Firefox and Chromium; WebKit rules cover Safari. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(22 22 22 / 0.38) transparent;
 }
 
-::-webkit-scrollbar-track {
-  background: #f3efe8;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece {
+  background: transparent;
+  border: 0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #b9a896;
-  border: 3px solid #f3efe8;
+  background-color: rgb(22 22 22 / 0.35);
+  border: 0;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #8f7d6c;
+  background-color: rgb(22 22 22 / 0.55);
 }
 
-::-webkit-scrollbar-button {
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-corner {
   display: none;
-}
-
-@supports not selector(::-webkit-scrollbar) {
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: #b9a896 #f3efe8;
-  }
+  width: 0;
+  height: 0;
+  background: transparent;
 }
