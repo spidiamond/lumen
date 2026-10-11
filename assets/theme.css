@@ -34,6 +34,7 @@
   --page-gradient: linear-gradient(165deg, #fbf8f4 0%, #f4ece4 42%, #f0e2da 70%, #e7ddd2 100%);
 }
 
+html,
 body {
   background-color: #f4ece4;
   background-image: var(--page-gradient);
@@ -813,38 +814,43 @@ body:not(.template-index) .logo-flight {
   }
 }
 
-/* Track stays transparent. scrollbar-color covers Firefox and Chromium; WebKit rules cover Safari. */
+/* Hide the native track. The thumb is drawn over the page instead. */
 html {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(22 22 22 / 0.38) transparent;
+  scrollbar-width: none;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-  background: transparent;
-}
-
-::-webkit-scrollbar-track,
-::-webkit-scrollbar-track-piece {
-  background: transparent;
-  border: 0;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgb(22 22 22 / 0.35);
-  border: 0;
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(22 22 22 / 0.55);
-}
-
-::-webkit-scrollbar-button,
-::-webkit-scrollbar-corner {
-  display: none;
+html::-webkit-scrollbar {
   width: 0;
   height: 0;
-  background: transparent;
+  display: none;
+}
+
+.page-scrollbar {
+  position: fixed;
+  top: 8px;
+  right: 4px;
+  bottom: 8px;
+  z-index: 45;
+  width: 4px;
+  pointer-events: none;
+}
+
+.page-scrollbar__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 999px;
+  background: #6f6862;
+  opacity: 0;
+}
+
+.page-scrollbar.is-active .page-scrollbar__thumb {
+  opacity: 0.8;
+}
+
+@media (max-width: 749px) {
+  .page-scrollbar {
+    display: none;
+  }
 }

@@ -235,3 +235,39 @@
     motionQuery.addListener(onResize);
   }
 })();
+
+(function () {
+  var bar = document.querySelector('[data-page-scrollbar]');
+  var thumb = bar && bar.querySelector('[data-page-scrollbar-thumb]');
+  if (!bar || !thumb) return;
+
+  var frame = 0;
+
+  function sync() {
+    frame = 0;
+    var root = document.documentElement;
+    var max = root.scrollHeight - window.innerHeight;
+    var track = bar.clientHeight;
+
+    if (max <= 1 || track <= 0) {
+      bar.classList.remove('is-active');
+      return;
+    }
+
+    var height = Math.max(track * (window.innerHeight / root.scrollHeight), 48);
+    if (height > track) height = track;
+    var top = (window.scrollY / max) * (track - height);
+    thumb.style.height = height + 'px';
+    thumb.style.transform = 'translate3d(0,' + top + 'px,0)';
+    bar.classList.add('is-active');
+  }
+
+  function onScroll() {
+    if (frame) return;
+    frame = window.requestAnimationFrame(sync);
+  }
+
+  sync();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+})();
