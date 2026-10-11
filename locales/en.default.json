@@ -32,6 +32,7 @@
   },
   "general": {
     "accessibility": {
+      "announcement": "Announcement",
       "skip_to_content": "Skip to content"
     }
   },

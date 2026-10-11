@@ -117,9 +117,9 @@ body {
 }
 
 .skip-link {
-  position: absolute;
+  position: fixed;
   left: max(16px, env(safe-area-inset-left));
-  top: 12px;
+  top: calc(var(--header-visible, var(--header-height, 76px)) + 12px);
   z-index: 100;
   padding: 10px 16px;
   background: #161616;
@@ -130,11 +130,22 @@ body {
   line-height: 1;
   text-decoration: none;
   text-transform: uppercase;
-  transform: translateY(-160%);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .skip-link:focus {
-  transform: translateY(0);
+  clip-path: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  pointer-events: auto;
   outline: 2px solid #f4ece4;
   outline-offset: 2px;
 }

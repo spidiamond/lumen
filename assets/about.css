@@ -614,7 +614,7 @@
 
   .about-story__stage {
     position: sticky;
-    top: calc(var(--header-height, 76px) + 24px);
+    top: calc(var(--header-visible, var(--header-height, 76px)) + 24px);
     display: block;
     height: min(68vh, 680px);
   }

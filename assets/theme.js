@@ -84,11 +84,16 @@
     flight.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0) scale(' + scale + ')';
   }
 
+  function setHeaderProgress(value) {
+    header.style.setProperty('--header-progress', value);
+    document.documentElement.style.setProperty('--header-progress', value);
+  }
+
   function paintChrome(progress) {
     var chromeSpan = Math.max(1 - geometry.chromeStart, 0.001);
     var chrome = easeInOutCubic(clamp((progress - geometry.chromeStart) / chromeSpan, 0, 1));
 
-    header.style.setProperty('--header-progress', chrome.toFixed(4));
+    setHeaderProgress(chrome.toFixed(4));
     lightLogo.style.opacity = String(1 - chrome);
     darkLogo.style.opacity = String(chrome);
 
@@ -124,8 +129,23 @@
     if (playAttempt && typeof playAttempt.catch === 'function') playAttempt.catch(function () {});
   }
 
+  var headerDocked = null;
+
+  function syncSlotTarget() {
+    if (!geometry || !slot) return;
+    var slotRect = slot.getBoundingClientRect();
+    geometry.endCenterX = slotRect.left + slotRect.width / 2;
+    geometry.endCenterY = slotRect.top + slotRect.height / 2;
+    if (geometry.startWidth > 0 && slotRect.width > 0) {
+      geometry.scale = slotRect.width / geometry.startWidth;
+    }
+  }
+
   function update(scrollY) {
     if (!geometry) return;
+    var docked = scrollY >= readNumber('--announcement-height', 0);
+    if (!docked || docked !== headerDocked) syncSlotTarget();
+    headerDocked = docked;
     var progress = progressFor(scrollY);
     place(progress);
     paintChrome(progress);
@@ -143,7 +163,7 @@
 
     if (scrolled) {
       flight.style.opacity = '0';
-      header.style.setProperty('--header-progress', '1');
+      setHeaderProgress('1');
       if (caption) caption.style.opacity = '0';
       var slotLogo = slot.querySelector('img');
       if (slotLogo) slotLogo.style.opacity = '1';
@@ -153,7 +173,7 @@
       flight.style.opacity = '1';
       lightLogo.style.opacity = '1';
       darkLogo.style.opacity = '0';
-      header.style.setProperty('--header-progress', '0');
+      setHeaderProgress('0');
       if (caption) caption.style.opacity = '1';
       var restingLogo = slot.querySelector('img');
       if (restingLogo) restingLogo.style.opacity = '0';

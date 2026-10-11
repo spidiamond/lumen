@@ -56,8 +56,8 @@
   function headerOffset() {
     var header = document.querySelector('[data-site-header]');
     if (!header) return 0;
-    var height = header.getBoundingClientRect().height;
-    return height > 0 ? height : 0;
+    var bottom = header.getBoundingClientRect().bottom;
+    return bottom > 0 ? bottom : 0;
   }
 
   function blocked() {

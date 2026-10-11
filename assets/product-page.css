@@ -1417,7 +1417,7 @@
     order: -1;
     align-self: start;
     position: sticky;
-    top: calc(var(--header-height, 76px) + 20px);
+    top: calc(var(--header-visible, var(--header-height, 76px)) + 20px);
     padding-top: 12px;
   }
 
@@ -1472,7 +1472,7 @@
 
   .pp-band--benefits .pp-band__head {
     position: sticky;
-    top: calc(var(--header-height, 76px) + 32px);
+    top: calc(var(--header-visible, var(--header-height, 76px)) + 32px);
   }
 
   .pp-band--benefits .pp-benefits {

@@ -1,0 +1,83 @@
+{%- if section.settings.text != blank -%}
+  <style>
+    :root {
+      --announcement-height: 32px;
+    }
+
+    @media (max-width: 749px) {
+      :root {
+        --announcement-height: 28px;
+      }
+    }
+  </style>
+
+  <div
+    class="announcement-bar full-width"
+    role="region"
+    aria-label="{{ 'general.accessibility.announcement' | t }}"
+    data-announcement-bar
+  >
+    {%- if section.settings.link != blank -%}
+      <a class="announcement-bar__link" href="{{ section.settings.link }}">
+        {{- section.settings.text | escape -}}
+      </a>
+    {%- else -%}
+      <p class="announcement-bar__text">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  <script>
+    (function () {
+      if (window.LumenAnnouncementScroll) return;
+      window.LumenAnnouncementScroll = true;
+
+      var root = document.documentElement;
+      var bar = document.querySelector('[data-announcement-bar]');
+      if (!bar) return;
+
+      var current = -1;
+
+      function sync() {
+        var offset = Math.min(Math.max(window.scrollY || 0, 0), bar.offsetHeight);
+        if (offset === current) return;
+        current = offset;
+        root.style.setProperty('--announcement-offset', offset + 'px');
+      }
+
+      sync();
+      window.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement",
+  "tag": "div",
+  "class": "section-announcement",
+  "limit": 1,
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Complimentary shipping on orders over $75"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Optional. Leave empty to show the message without a link."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement"
+    }
+  ]
+}
+{% endschema %}

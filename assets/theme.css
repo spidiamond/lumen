@@ -4,7 +4,11 @@
   Tune these on :root. Media queries override them for smaller screens.
   --logo-start-width          Large hero wordmark width
   --logo-end-width            Navbar wordmark width (also the scale target)
-  --header-height             Navbar bar height
+  --header-bar-height         Navbar bar height, excluding the announcement
+  --announcement-height       Announcement strip. 0 when the bar is hidden
+  --announcement-offset       How far the strip has scrolled off. 0 until it starts to leave
+  --header-height             Resting chrome used for page offset: announcement + navbar
+  --header-visible            Chrome still on screen. Shrinks to the navbar as the strip leaves
   --logo-transition-distance  0–1 fraction of the hero height used as the scroll run
   --logo-chrome-start         0–1 scroll progress where the bar starts turning solid
                               and the wordmark starts shifting from light to dark
@@ -13,7 +17,11 @@
 :root {
   --logo-start-width: min(78vw, 980px);
   --logo-end-width: 176px;
-  --header-height: 76px;
+  --header-bar-height: 76px;
+  --announcement-height: 0px;
+  --announcement-offset: 0px;
+  --header-height: calc(var(--header-bar-height) + var(--announcement-height));
+  --header-visible: calc(var(--header-height) - var(--announcement-offset));
   --logo-transition-distance: 0.72;
   --logo-chrome-start: 0.52;
   --logo-ratio: 0.26993865; /* logo SVG height / width */
@@ -36,7 +44,7 @@ body {
   :root {
     --logo-start-width: min(74vw, 760px);
     --logo-end-width: 150px;
-    --header-height: 68px;
+    --header-bar-height: 68px;
   }
 }
 
@@ -44,7 +52,7 @@ body {
   :root {
     --logo-start-width: min(84vw, 440px);
     --logo-end-width: 112px;
-    --header-height: 60px;
+    --header-bar-height: 60px;
     --logo-transition-distance: 0.66;
   }
 }
@@ -53,14 +61,14 @@ body {
   :root {
     --logo-start-width: min(88vw, 300px);
     --logo-end-width: 64px;
-    --header-height: 56px;
+    --header-bar-height: 56px;
   }
 }
 
 @media (max-height: 520px) {
   :root {
     --logo-start-width: min(46vw, 480px);
-    --header-height: 56px;
+    --header-bar-height: 56px;
   }
 }
 
@@ -70,11 +78,96 @@ body {
   display: block;
 }
 
+/* The strip scrolls with the page. Keep the section out of flow so the hero still starts at the top. */
+.section-announcement {
+  display: block;
+  height: 0;
+  min-height: 0;
+  overflow: visible;
+}
+
+.section-announcement ~ .section-announcement {
+  display: none;
+}
+
+.announcement-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 41;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--announcement-height);
+  padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+  background-color: color-mix(
+    in srgb,
+    rgb(22 22 22 / 0.22) calc((1 - var(--header-progress, 0)) * 100%),
+    #fff
+  );
+  color: color-mix(
+    in srgb,
+    var(--hero-ink) calc((1 - var(--header-progress, 0)) * 100%),
+    var(--header-ink)
+  );
+  box-shadow: inset 0 -1px 0 rgb(22 22 22 / calc(var(--header-progress, 0) * 0.08));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.announcement-bar__link,
+.announcement-bar__text {
+  margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-family: var(--nav-font);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-indent: 0.16em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.announcement-bar__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.announcement-bar__link:hover {
+  opacity: 0.72;
+}
+
+.announcement-bar__link:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+html.site-menu-locked .announcement-bar {
+  background-color: var(--page-cream);
+  color: var(--header-ink);
+  box-shadow: inset 0 -1px 0 rgb(22 22 22 / 0.08);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
 .site-header {
   position: fixed;
-  inset: 0 0 auto 0;
+  top: calc(var(--announcement-height) - var(--announcement-offset, 0px));
+  right: 0;
+  left: 0;
   z-index: 40;
-  height: var(--header-height);
+  height: var(--header-bar-height);
   overflow: visible;
   color: var(--hero-ink);
   pointer-events: none;
@@ -95,7 +188,7 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  height: 100%;
+  height: var(--header-bar-height);
   padding-inline: max(28px, env(safe-area-inset-left)) max(28px, env(safe-area-inset-right));
   pointer-events: none;
   color: color-mix(in srgb, var(--hero-ink) calc((1 - var(--header-progress)) * 100%), var(--header-ink));
@@ -384,8 +477,11 @@ html.site-menu-locked {
   overflow: hidden;
 }
 
-body:not(.template-index) .site-header {
+body:not(.template-index) {
   --header-progress: 1;
+}
+
+body:not(.template-index) .site-header {
   color: var(--header-ink);
 }
 
@@ -548,6 +644,17 @@ body:not(.template-index) .logo-flight {
     display: none;
   }
 
+  .announcement-bar {
+    padding-inline: max(14px, env(safe-area-inset-left)) max(14px, env(safe-area-inset-right));
+  }
+
+  .announcement-bar__link,
+  .announcement-bar__text {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
+  }
+
   .site-menu {
     --menu-ease: cubic-bezier(0.65, 0, 0.35, 1);
 
@@ -556,7 +663,7 @@ body:not(.template-index) .logo-flight {
     z-index: 2;
     display: block;
     overflow-y: auto;
-    padding: calc(var(--header-height) + 28px) max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left));
+    padding: calc(var(--header-visible) + 28px) max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left));
     background: var(--page-cream);
     color: var(--header-ink);
     visibility: hidden;
@@ -664,6 +771,12 @@ body:not(.template-index) .logo-flight {
     height: 12px;
   }
 
+  .announcement-bar__link,
+  .announcement-bar__text {
+    letter-spacing: 0.06em;
+    text-indent: 0.06em;
+  }
+
   .home-hero__eyebrow {
     font-size: 9px;
     letter-spacing: 0.16em;
@@ -676,6 +789,7 @@ body:not(.template-index) .logo-flight {
     will-change: auto;
   }
 
+  .announcement-bar__link,
   .site-header__link,
   .site-header__icon-button,
   .site-header__currency-toggle,
